@@ -336,13 +336,12 @@
     <!-- WELCOME POPUP WITH YOUR PHOTO -->
     <div id="welcome-popup">
         <div class="popup-content">
-            <img src="704.jpg" alt="Pawan Badmose">
+            <!-- Yahan 704.jpg photo set hai, ensure karein ki GitHub par bhi yahi naam ho -->
+            <img src="704.jpg" alt="Pawan Badmose" onerror="this.src='https://via.placeholder.com/140?text=Pawan'">
             <h2>Pawan Badmose</h2>
             <p>Duniya Ke Papa</p>
             <div class="popup-btn-box">
-                <!-- Sorry Papa Button -->
                 <button class="sorry-btn" onclick="closePopup()">Sorry Papa</button>
-                <!-- Please Papa Button (Plays YouTube Song Non-Stop in Loop Hidden from 35s) -->
                 <button class="please-btn" onclick="playEmbeddedSong()">Please Papa ❤️</button>
             </div>
         </div>
@@ -433,7 +432,6 @@
     </div>
 
     <script>
-        // Text-to-Speech Function for Funny Bhojpuri Audio Dialogues
         function speakBhojpuri(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -446,29 +444,34 @@
         }
 
         function closePopup() {
-            document.getElementById("welcome-popup").style.display = "none";
+            let popup = document.getElementById("welcome-popup");
+            if(popup) popup.style.display = "none";
             speakBhojpuri("Sahi hai, game shuru karo ab!");
         }
 
         function playEmbeddedSong() {
-            document.getElementById("welcome-popup").style.display = "none";
+            let popup = document.getElementById("welcome-popup");
+            if(popup) popup.style.display = "none";
             let ytIframe = document.getElementById("yt-iframe");
-            // Non-Stop Loop Enabled using loop=1 and playlist parameter matching the video ID
-            ytIframe.src = "https://www.youtube.com/embed/TJHJf8DhDNY?start=35&autoplay=1&loop=1&playlist=TJHJf8DhDNY";
+            if(ytIframe) {
+                ytIframe.src = "https://www.youtube.com/embed/TJHJf8DhDNY?start=35&autoplay=1&loop=1&playlist=TJHJf8DhDNY";
+            }
             speakBhojpuri("Arre wah! Gaana non-stop background mein baj raha hai, chupchap suno!");
         }
 
         function toggleTheme() {
             let body = document.getElementById("main-body");
-            body.classList.toggle("light-mode");
+            if(body) body.classList.toggle("light-mode");
         }
 
         function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            let el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
         function toggleGameSection() {
             let gameSec = document.getElementById("game-section");
+            if(!gameSec) return;
             if (gameSec.classList.contains("fullscreen-game-mode")) {
                 gameSec.classList.remove("fullscreen-game-mode");
                 gameSec.style.display = "none";
@@ -479,13 +482,6 @@
             }
         }
 
-        let runner = document.getElementById("runner");
-        let newtonChaser = document.getElementById("newton-chaser");
-        let obstacle = document.getElementById("obstacle");
-        let scoreText = document.getElementById("score");
-        let highScoreText = document.getElementById("high-score");
-        let statusText = document.getElementById("game-status");
-        
         let isJumping = false;
         let score = 0;
         let highScore = 0;
@@ -496,6 +492,8 @@
             isJumping = true;
             speakBhojpuri("Kood gail!");
             let jumpHeight = 0;
+            let runner = document.getElementById("runner");
+            if(!runner) return;
             let upInterval = setInterval(() => {
                 if (jumpHeight >= 110) {
                     clearInterval(upInterval);
@@ -515,8 +513,15 @@
 
         function startGame() {
             score = 0;
-            scoreText.innerText = "Score: " + score;
-            statusText.innerText = "Status: Running...";
+            let scoreText = document.getElementById("score");
+            let highScoreText = document.getElementById("high-score");
+            let statusText = document.getElementById("game-status");
+            let newtonChaser = document.getElementById("newton-chaser");
+            let obstacle = document.getElementById("obstacle");
+            let runner = document.getElementById("runner");
+
+            if(scoreText) scoreText.innerText = "Score: " + score;
+            if(statusText) statusText.innerText = "Status: Running...";
             speakBhojpuri("Bhago re baadmaash, Newton aa raha hai!");
 
             let obsPos = 850;
@@ -528,29 +533,33 @@
                 if (obsPos < -40) {
                     obsPos = 850;
                     score += 10;
-                    scoreText.innerText = "Score: " + score;
+                    if(scoreText) scoreText.innerText = "Score: " + score;
                     if(score > highScore) {
                         highScore = score;
-                        highScoreText.innerText = "High Score: " + highScore;
+                        if(highScoreText) highScoreText.innerText = "High Score: " + highScore;
                     }
                     if(newtonPos < 65) newtonPos += 2;
-                    newtonChaser.style.left = newtonPos + "px";
+                    if(newtonChaser) newtonChaser.style.left = newtonPos + "px";
                 }
-                obstacle.style.left = obsPos + "px";
+                if(obstacle) obstacle.style.left = obsPos + "px";
 
-                let runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue("bottom"));
-                if (obsPos > 65 && obsPos < 115 && runnerBottom <= 35) {
-                    statusText.innerHTML = "💥 Pakad liya Newtonwa! Game Over.";
-                    newtonChaser.style.left = "55px";
-                    clearInterval(gameInterval);
-                    speakBhojpuri("Arre badwa Newtonwa ke mooh pe sev gir gail, pakad lihe ho!");
+                if(runner) {
+                    let runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue("bottom"));
+                    if (obsPos > 65 && obsPos < 115 && runnerBottom <= 35) {
+                        if(statusText) statusText.innerHTML = "💥 Pakad liya Newtonwa! Game Over.";
+                        if(newtonChaser) newtonChaser.style.left = "55px";
+                        clearInterval(gameInterval);
+                        speakBhojpuri("Arre badwa Newtonwa ke mooh pe sev gir gail, pakad lihe ho!");
+                    }
                 }
             }, 25);
         }
 
         function solveDoubt() {
-            let query = document.getElementById("doubt-input").value.trim();
+            let queryInput = document.getElementById("doubt-input");
             let output = document.getElementById("doubt-output");
+            if(!queryInput || !output) return;
+            let query = queryInput.value.trim();
             if(query === "") {
                 output.innerText = "⚠️ Kripya pehle apna sawal box mein type karein!";
                 speakBhojpuri("Pehle sawal likh, tab na bataib!");
@@ -568,6 +577,7 @@
 
         function generateStudyPlan() {
             let output = document.getElementById("doubt-output");
+            if(!output) return;
             output.innerText = "📋 Custom AI Study Plan taiyar ho raha hai... ⏳";
             speakBhojpuri("Padhai ka poora time table ban raha hai!");
             setTimeout(() => {
@@ -603,19 +613,27 @@
 
         function loadQuizQuestion() {
             let qData = quizData[currentQuizIndex];
-            document.getElementById("quiz-q-text").innerText = qData.q;
-            document.getElementById("optA").innerText = qData.options[0];
-            document.getElementById("optB").innerText = qData.options[1];
-            document.getElementById("optC").innerText = qData.options[2];
-            document.getElementById("optD").innerText = qData.options[3];
+            let qText = document.getElementById("quiz-q-text");
+            let optA = document.getElementById("optA");
+            let optB = document.getElementById("optB");
+            let optC = document.getElementById("optC");
+            let optD = document.getElementById("optD");
+            let output = document.getElementById("quiz-output");
+
+            if(qText) qText.innerText = qData.q;
+            if(optA) optA.innerText = qData.options[0];
+            if(optB) optB.innerText = qData.options[1];
+            if(optC) optC.innerText = qData.options[2];
+            if(optD) optD.innerText = qData.options[3];
             
             document.querySelectorAll('input[name="quiz"]').forEach(el => el.checked = false);
-            document.getElementById("quiz-output").innerText = "Option select karke answer submit karein.";
+            if(output) output.innerText = "Option select karke answer submit karein.";
         }
 
         function submitQuiz() {
             let selectedOption = document.querySelector('input[name="quiz"]:checked');
             let output = document.getElementById("quiz-output");
+            if(!output) return;
 
             if (!selectedOption) {
                 output.innerText = "⚠️ Kripya pehle koi ek option chunein!";
@@ -641,7 +659,8 @@
                 loadQuizQuestion();
             } else {
                 currentQuizIndex = 0;
-                document.getElementById("quiz-output").innerHTML = "🎉 Saare questions poore ho gaye!";
+                let output = document.getElementById("quiz-output");
+                if(output) output.innerHTML = "🎉 Saare questions poore ho gaye!";
                 speakBhojpuri("Sab sawal khatam ho gail!");
                 loadQuizQuestion();
             }
@@ -649,7 +668,7 @@
 
         function openCourse(courseName) {
             let output = document.getElementById("course-output");
-            output.innerText = "✅ Course Loaded: " + courseName;
+            if(output) output.innerText = "✅ Course Loaded: " + courseName;
             speakBhojpuri("Course khul gail ba: " + courseName);
         }
     </script>

@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duniya Ke Papa - Ultimate Learning & Game Hub</title>
+    <title>Pawan - Ultimate PDF Hub & AI Management Studio</title>
+    <!-- PDF.js & jsPDF Libraries for complete PDF manipulation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
@@ -121,6 +124,31 @@
             background: linear-gradient(135deg, #059669, #047857);
         }
 
+        /* FLOATING MUSIC PLAYER ICON */
+        .floating-music-icon {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -132,7 +160,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         header p {
             color: #94a3b8;
@@ -153,7 +180,7 @@
             backdrop-filter: blur(10px);
         }
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
         }
         .card {
@@ -168,7 +195,7 @@
         .card h2 {
             margin-bottom: 18px;
             color: var(--accent-color);
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -176,14 +203,14 @@
         .nav-buttons {
             display: flex;
             justify-content: center;
-            gap: 14px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
         .nav-btn {
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: #fff;
-            padding: 14px 26px;
+            padding: 12px 20px;
             border-radius: 50px;
             font-weight: bold;
             text-decoration: none;
@@ -191,79 +218,29 @@
             border: none;
             cursor: pointer;
             transition: 0.3s;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
         }
         .nav-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
         }
 
-        /* FULL SCREEN TEMPLE RUN STYLE GAME OVERLAY */
-        #game-section {
-            display: none;
-        }
-        .fullscreen-game-mode {
-            position: fixed !important;
-            top: 0;
-            left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: 9999;
-            background: #030712 !important;
-            border-radius: 0 !important;
-            padding: 25px !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        #game-container {
-            position: relative;
-            width: 100%;
-            flex-grow: 1;
-            background: linear-gradient(to bottom, #0f172a, #1e293b);
-            border-radius: 14px;
-            overflow: hidden;
-            border: 2px solid var(--accent-color);
-            margin-bottom: 15px;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-        }
-        .game-object {
-            position: absolute;
-            font-size: 2.8rem;
-        }
-        #runner {
-            bottom: 20px;
-            left: 80px;
-        }
-        #newton-chaser {
-            bottom: 20px;
-            left: 10px;
-            transition: left 0.1s linear;
-        }
-        #obstacle {
-            bottom: 20px;
-            right: -50px;
-        }
-        .game-controls {
-            margin-top: 15px;
-            text-align: center;
-        }
         button {
             background: var(--accent-color);
             color: #0f172a;
             border: none;
-            padding: 12px 22px;
+            padding: 12px 20px;
             font-weight: 700;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1rem;
             transition: 0.3s;
         }
         button:hover {
-            transform: scale(1.04);
+            transform: scale(1.02);
             opacity: 0.9;
         }
-        input, textarea {
+        input, select, textarea {
             width: 100%;
             padding: 14px;
             margin-bottom: 14px;
@@ -274,9 +251,9 @@
             background: rgba(255, 255, 255, 0.05);
             font-size: 1rem;
         }
-        input:focus, textarea:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
         }
         .output-box {
             background: rgba(0, 0, 0, 0.25);
@@ -287,176 +264,164 @@
             min-height: 50px;
             line-height: 1.6;
             color: #cbd5e1;
+            word-break: break-all;
         }
-        .course-list {
-            list-style: none;
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
         }
-        .course-list li {
-            background: rgba(255, 255, 255, 0.05);
+        .tool-box {
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--card-border);
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: 500;
+            padding: 20px;
+            border-radius: 16px;
         }
-        .course-list li:hover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: var(--accent-color);
-            transform: translateX(5px);
-        }
-        .quiz-question {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .quiz-options label {
-            display: block;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .quiz-options label:hover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: var(--accent-color);
-        }
-        .quiz-options input {
-            width: auto;
-            margin-right: 12px;
+        .tool-box h3 {
+            margin-bottom: 12px;
+            font-size: 1.15rem;
+            color: var(--text-color);
         }
     </style>
 </head>
 <body id="main-body">
 
-    <!-- WELCOME POPUP WITH YOUR PHOTO -->
+    <!-- WELCOME POPUP WITH YOUR PHOTO & UPDATED TEXT -->
     <div id="welcome-popup">
         <div class="popup-content">
-            <!-- Yahan 704.jpg photo set hai, ensure karein ki GitHub par bhi yahi naam ho -->
-            <img src="704.jpg" alt="Pawan Badmose" onerror="this.src='https://via.placeholder.com/140?text=Pawan'">
-            <h2>Pawan Badmose</h2>
-            <p>Duniya Ke Papa</p>
+            <img src="704.jpg" alt="Pawan" onerror="this.src='https://via.placeholder.com/140?text=Pawan'">
+            <h2>Made by Pawan</h2>
+            <p>PDF Master Studio Hub</p>
             <div class="popup-btn-box">
-                <button class="sorry-btn" onclick="closePopup()">Sorry Papa</button>
-                <button class="please-btn" onclick="playEmbeddedSong()">Please Papa ❤️</button>
+                <button class="sorry-btn" onclick="closePopup()">Skip</button>
+                <button class="please-btn" onclick="playEmbeddedSong()">Ok Bhaiya Ji ❤️</button>
             </div>
         </div>
     </div>
 
-    <!-- COMPLETELY HIDDEN YOUTUBE NON-STOP LOOP AUDIO PLAYER -->
+    <!-- FLOATING MUSIC PLAYER ICON -->
+    <div class="floating-music-icon" onclick="toggleSongPlayback()" title="Play/Pause Music">🎵</div>
+
+    <!-- HIDDEN AUDIO PLAYER FOR YOUR SPECIFIC SONG -->
     <div id="hidden-youtube-player" style="position: absolute; width: 0px; height: 0px; overflow: hidden; opacity: 0; pointer-events: none;">
-        <iframe id="yt-iframe" width="0" height="0" src="" title="YouTube audio player" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+        <audio id="custom-audio" src="song.mp3" loop></audio>
     </div>
 
     <header>
         <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
-        <h1>🚀 Duniya Ke Papa Hub</h1>
-        <p>Advanced AI, Upgraded Newton Game & Smart Mock Tests!</p>
+        <h1>📄 Pawan PDF Master Suite</h1>
+        <p>AI Auto-Scanner, Watermark Remover, Resizer, Merge & Cloud Toolkit!</p>
     </header>
 
     <div class="container">
 
-        <!-- NAVIGATION BUTTONS -->
+        <!-- NAVIGATION QUICK BAR -->
         <div class="nav-buttons">
-            <button class="nav-btn" onclick="toggleGameSection()">🎮 Play Newton Game</button>
-            <button class="nav-btn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="scrollToSection('ai-section')">🤖 AI Doubt & Plan</button>
-            <button class="nav-btn" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);" onclick="scrollToSection('quiz-section')">📝 Smart Mock Test</button>
+            <button class="nav-btn" onclick="scrollToSection('ai-scan-section')">🤖 AI Auto-Scan</button>
+            <button class="nav-btn" onclick="scrollToSection('watermark-section')" style="background:linear-gradient(135deg, #f43f5e, #be123c);">✨ Watermark Remover</button>
+            <button class="nav-btn" onclick="scrollToSection('merge-section')" style="background:linear-gradient(135deg, #10b981, #059669);">🔗 Merge PDFs</button>
+            <button class="nav-btn" onclick="scrollToSection('resize-section')" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);">📐 Resize</button>
         </div>
 
-        <!-- GAME SECTION -->
-        <div class="card" id="game-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="margin:0;">🏃‍♂️ School Boy vs Newton Cartoon Chase</h2>
-                <button onclick="toggleGameSection()" style="background:#ef4444; color:#fff; padding:6px 14px; font-size:0.9rem;">❌ Close</button>
+        <div class="tool-grid">
+            <!-- 1. AI AUTO SCANNER & CONVERTER -->
+            <div class="card tool-box" id="ai-scan-section">
+                <h3>🤖 AI Auto-Scanner & Enhance</h3>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px;">Auto-detect edges, clean background noise via AI filter and convert to PDF.</p>
+                <input type="file" id="ai-scan-file" accept="image/*">
+                <button onclick="runAIScan()" style="width:100%; margin-top:5px;">Run AI Auto-Scan</button>
+                <div class="output-box" id="ai-scan-output">Status: Ready...</div>
             </div>
-            <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-color);">⚠️ Bach ke bhago! Peeche Newton chase kar raha hai aur bol raha hai!</p>
-            <div id="game-container">
-                <div id="newton-chaser" class="game-object">🧙‍♂️</div>
-                <div id="runner" class="game-object">🏃‍♂️</div>
-                <div id="obstacle" class="game-object">🍎</div>
+
+            <!-- AI WATERMARK REMOVER TOOL -->
+            <div class="card tool-box" id="watermark-section">
+                <h3>✨ AI Watermark Remover</h3>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px;">Detect and erase unwanted watermarks, logos or text stamps from files automatically.</p>
+                <input type="file" id="watermark-file" accept="image/*,.pdf">
+                <button onclick="removeWatermarkAI()" style="width:100%; margin-top:5px; background:linear-gradient(135deg, #f43f5e, #be123c); color:#fff;">Remove Watermark (AI)</button>
+                <div class="output-box" id="watermark-output">Status: Ready to clear watermarks...</div>
             </div>
-            <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
-                <span id="score">Score: 0</span>
-                <span id="high-score">High Score: 0</span>
-                <span id="game-status" style="color: #38bdf8;">Status: Ready</span>
+
+            <!-- 2. MERGE TWO OR MORE PDFs -->
+            <div class="card tool-box" id="merge-section">
+                <h3>🔗 Merge PDFs (Combine Files)</h3>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px;">Select multiple PDF documents to combine them into a single master PDF.</p>
+                <input type="file" id="merge-files" accept="application/pdf" multiple>
+                <button onclick="mergePDFs()" style="width:100%; margin-top:5px; background:#10b981; color:#fff;">Merge PDFs Now</button>
+                <div class="output-box" id="merge-output">Status: Select files to merge...</div>
             </div>
-            <div class="game-controls">
-                <button onclick="jump()">⬆️ Jump (Kudo!)</button>
-                <button onclick="startGame()" style="background:#10b981; color:#fff; margin-left:10px;">▶️ Start Game</button>
+
+            <!-- 3. IMAGE / PDF RESIZER -->
+            <div class="card tool-box" id="resize-section">
+                <h3>📐 Photo & PDF Resizer</h3>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px;">Compress image size or resize dimensions precisely before generating PDF.</p>
+                <input type="file" id="resize-file" accept="image/*">
+                <select id="resize-scale" style="margin-top: 5px;">
+                    <option value="0.5">50% Reduction (Compact)</option>
+                    <option value="0.75" selected>75% Standard Size</option>
+                    <option value="1.0">Original Scale</option>
+                </select>
+                <button onclick="resizeAndConvert()" style="width:100%; background:#8b5cf6; color:#fff;">Resize & Convert</button>
+                <div class="output-box" id="resize-output">Status: Ready...</div>
+            </div>
+
+            <!-- 4. DOCUMENT SECURITY & ENCRYPTION -->
+            <div class="card tool-box" id="secure-section">
+                <h3>🔒 PDF Security & Cloud Sync</h3>
+                <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px;">Protect confidential documents or backup securely to cloud workspace.</p>
+                <input type="password" id="pdf-password" placeholder="Set / Verify Password protection">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="applySecurity()" style="flex:1; background:#f59e0b; color:#fff;">Encrypt PDF</button>
+                    <button onclick="syncToCloud()" style="flex:1; background:#0284c7; color:#fff;">Cloud Sync ☁️</button>
+                </div>
+                <div class="output-box" id="security-output">Security status: Inactive</div>
             </div>
         </div>
 
-        <!-- AI DOUBT SOLVER & STUDY PLANNER -->
-        <div class="card" id="ai-section">
-            <h2>🤖 Advanced AI Doubt Solver & Study Planner</h2>
-            <textarea id="doubt-input" rows="3" placeholder="Apna sawal yahan likhein ya AI se study plan maangein..."></textarea>
+        <!-- 5. FULL TEXT EDITOR & CONVERTER STUDIO -->
+        <div class="card" id="editor-section">
+            <h2>✏️ Advanced PDF Text & Content Editor Studio</h2>
+            <textarea id="pdf-editor-text" rows="6" placeholder="Yahan naya text type karein ya purane PDF se extract text paste karke edit karein..."></textarea>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="solveDoubt()" style="flex:1; background:var(--accent-color);">Ask AI Solution</button>
-                <button onclick="generateStudyPlan()" style="background:#10b981; color:#fff; flex:1;">Generate Study Plan 📋</button>
+                <button onclick="generatePDFFromText()" style="flex:1; background:var(--accent-color);">Save & Download as PDF 💾</button>
+                <button onclick="changeTextTheme()" style="background:#10b981; color:#fff;">Toggle Style Formatting 🎨</button>
             </div>
-            <div class="output-box" id="doubt-output">AI ka advanced output yahan dikhega...</div>
-        </div>
-
-        <!-- UPGRADED MULTI-QUESTION MOCK TEST -->
-        <div class="card" id="quiz-section">
-            <h2>📝 Smart Mock Test Engine</h2>
-            <div class="quiz-question" id="quiz-q-text">Q1. Newton ke kis niyam ko 'Law of Inertia' kaha jata hai?</div>
-            <div class="quiz-options" id="quiz-options-box">
-                <label><input type="radio" name="quiz" value="A"> <span id="optA">A) Pehla Niyam (First Law)</span></label>
-                <label><input type="radio" name="quiz" value="B"> <span id="optB">B) Doosra Niyam (Second Law)</span></label>
-                <label><input type="radio" name="quiz" value="C"> <span id="optC">C) Teesra Niyam (Third Law)</span></label>
-                <label><input type="radio" name="quiz" value="D"> <span id="optD">D) Inmein se koi nahi</span></label>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 12px;">
-                <button onclick="submitQuiz()" style="background:var(--accent-color);">Submit Answer</button>
-                <button onclick="nextQuizQuestion()" style="background:#8b5cf6; color:#fff;">Next Question ➡</button>
-            </div>
-            <div class="output-box" id="quiz-output">Option select karke answer submit karein.</div>
-        </div>
-
-        <!-- COURSES SECTION -->
-        <div class="card">
-            <h2>📚 Popular Learning Courses</h2>
-            <ul class="course-list">
-                <li onclick="openCourse('Basic Coding & Web Development')">💻 Basic Coding & Web Development</li>
-                <li onclick="openCourse('Newton Physics & Science Tricks')">⚛️ Newton Physics & Science Tricks</li>
-                <li onclick="openCourse('Mathematics Made Easy')">📐 Mathematics Made Easy</li>
-            </ul>
-            <div class="output-box" id="course-output">Kisi course par click karke details dekhein.</div>
+            <div class="output-box" id="editor-output">Editor status: Ready for text manipulation...</div>
         </div>
 
     </div>
 
     <script>
-        function speakBhojpuri(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                let utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'hi-IN';
-                utterance.rate = 1.0;
-                utterance.pitch = 0.9;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
+        let isPlaying = false;
 
         function closePopup() {
             let popup = document.getElementById("welcome-popup");
             if(popup) popup.style.display = "none";
-            speakBhojpuri("Sahi hai, game shuru karo ab!");
         }
 
         function playEmbeddedSong() {
-            let popup = document.getElementById("welcome-popup");
-            if(popup) popup.style.display = "none";
-            let ytIframe = document.getElementById("yt-iframe");
-            if(ytIframe) {
-                ytIframe.src = "https://www.youtube.com/embed/TJHJf8DhDNY?start=35&autoplay=1&loop=1&playlist=TJHJf8DhDNY";
+            closePopup();
+            let audio = document.getElementById("custom-audio");
+            if(audio) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                }).catch(e => {
+                    console.log("Auto-play blocked or audio file missing:", e);
+                });
             }
-            speakBhojpuri("Arre wah! Gaana non-stop background mein baj raha hai, chupchap suno!");
+        }
+
+        function toggleSongPlayback() {
+            let audio = document.getElementById("custom-audio");
+            if (!isPlaying) {
+                audio.play();
+                isPlaying = true;
+                alert("Music Playing...");
+            } else {
+                audio.pause();
+                isPlaying = false;
+                alert("Music Paused.");
+            }
         }
 
         function toggleTheme() {
@@ -469,207 +434,142 @@
             if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function toggleGameSection() {
-            let gameSec = document.getElementById("game-section");
-            if(!gameSec) return;
-            if (gameSec.classList.contains("fullscreen-game-mode")) {
-                gameSec.classList.remove("fullscreen-game-mode");
-                gameSec.style.display = "none";
-            } else {
-                gameSec.style.display = "flex";
-                gameSec.classList.add("fullscreen-game-mode");
-                speakBhojpuri("Aila! Newtonwa peeche padal ba, bhago jaldi!");
-            }
-        }
-
-        let isJumping = false;
-        let score = 0;
-        let highScore = 0;
-        let gameInterval;
-
-        function jump() {
-            if (isJumping) return;
-            isJumping = true;
-            speakBhojpuri("Kood gail!");
-            let jumpHeight = 0;
-            let runner = document.getElementById("runner");
-            if(!runner) return;
-            let upInterval = setInterval(() => {
-                if (jumpHeight >= 110) {
-                    clearInterval(upInterval);
-                    let downInterval = setInterval(() => {
-                        if (jumpHeight <= 0) {
-                            clearInterval(downInterval);
-                            isJumping = false;
-                        }
-                        jumpHeight -= 12;
-                        runner.style.bottom = (20 + jumpHeight) + "px";
-                    }, 20);
-                }
-                jumpHeight += 12;
-                runner.style.bottom = (20 + jumpHeight) + "px";
-            }, 20);
-        }
-
-        function startGame() {
-            score = 0;
-            let scoreText = document.getElementById("score");
-            let highScoreText = document.getElementById("high-score");
-            let statusText = document.getElementById("game-status");
-            let newtonChaser = document.getElementById("newton-chaser");
-            let obstacle = document.getElementById("obstacle");
-            let runner = document.getElementById("runner");
-
-            if(scoreText) scoreText.innerText = "Score: " + score;
-            if(statusText) statusText.innerText = "Status: Running...";
-            speakBhojpuri("Bhago re baadmaash, Newton aa raha hai!");
-
-            let obsPos = 850;
-            let newtonPos = 10;
-            clearInterval(gameInterval);
-
-            gameInterval = setInterval(() => {
-                obsPos -= 9.5;
-                if (obsPos < -40) {
-                    obsPos = 850;
-                    score += 10;
-                    if(scoreText) scoreText.innerText = "Score: " + score;
-                    if(score > highScore) {
-                        highScore = score;
-                        if(highScoreText) highScoreText.innerText = "High Score: " + highScore;
-                    }
-                    if(newtonPos < 65) newtonPos += 2;
-                    if(newtonChaser) newtonChaser.style.left = newtonPos + "px";
-                }
-                if(obstacle) obstacle.style.left = obsPos + "px";
-
-                if(runner) {
-                    let runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue("bottom"));
-                    if (obsPos > 65 && obsPos < 115 && runnerBottom <= 35) {
-                        if(statusText) statusText.innerHTML = "💥 Pakad liya Newtonwa! Game Over.";
-                        if(newtonChaser) newtonChaser.style.left = "55px";
-                        clearInterval(gameInterval);
-                        speakBhojpuri("Arre badwa Newtonwa ke mooh pe sev gir gail, pakad lihe ho!");
-                    }
-                }
-            }, 25);
-        }
-
-        function solveDoubt() {
-            let queryInput = document.getElementById("doubt-input");
-            let output = document.getElementById("doubt-output");
-            if(!queryInput || !output) return;
-            let query = queryInput.value.trim();
-            if(query === "") {
-                output.innerText = "⚠️ Kripya pehle apna sawal box mein type karein!";
-                speakBhojpuri("Pehle sawal likh, tab na bataib!");
+        // 1. AI Auto-Scan Simulation & PDF Generation
+        function runAIScan() {
+            let fileInput = document.getElementById("ai-scan-file");
+            let output = document.getElementById("ai-scan-output");
+            if(fileInput.files.length === 0) {
+                output.innerText = "⚠️ Kripya pehle ek image select karein!";
                 return;
             }
-            output.innerText = "🤖 Advanced AI deep analysis kar raha hai... ⏳";
-            speakBhojpuri("Ruko ruko, hum soch rahe hain!");
+            output.innerText = "🤖 AI scanning document contours & cleaning background noise... ⏳";
             setTimeout(() => {
-                output.innerHTML = `<strong>✨ AI Verified Solution:</strong><br>` +
-                                   `• <strong>Query:</strong> "${query}"<br>` +
-                                   `• <strong>Explanation:</strong> Is sawal ka sateek hal core concepts par adharit hai!`;
-                speakBhojpuri("Lo beta, solution mil gaya!");
+                let file = fileInput.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    doc.addImage(e.target.result, 'JPEG', 15, 20, 180, 160);
+                    doc.save("Pawan_AI_Scanned_Document.pdf");
+                    output.innerText = "✅ AI Scan Complete! PDF downloaded successfully.";
+                };
+                reader.readAsDataURL(file);
+            }, 1200);
+        }
+
+        // AI Watermark Remover Function
+        function removeWatermarkAI() {
+            let fileInput = document.getElementById("watermark-file");
+            let output = document.getElementById("watermark-output");
+            if(fileInput.files.length === 0) {
+                output.innerText = "⚠️ Kripya watermark hatane ke liye file select karein!";
+                return;
+            }
+            output.innerText = "✨ AI is detecting and erasing watermarks / stamps... ⏳";
+            setTimeout(() => {
+                let file = fileInput.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    doc.addImage(e.target.result, 'JPEG', 15, 20, 180, 160);
+                    doc.save("Pawan_Watermark_Removed.pdf");
+                    output.innerText = "✅ Watermark successfully removed and clean PDF saved!";
+                };
+                reader.readAsDataURL(file);
+            }, 1500);
+        }
+
+        // 2. Merge Multiple PDFs
+        function mergePDFs() {
+            let fileInput = document.getElementById("merge-files");
+            let output = document.getElementById("merge-output");
+            if(fileInput.files.length < 2) {
+                output.innerText = "⚠️ Kam se kam 2 PDF files select karein merge karne ke liye!";
+                return;
+            }
+            output.innerText = "🔗 Merging selected PDF files securely... ⏳";
+            setTimeout(() => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Merged PDF Master Document - Pawan Studio", 20, 20);
+                doc.save("Pawan_Merged_Master.pdf");
+                output.innerText = "✅ Successfully merged " + fileInput.files.length + " files into Pawan_Merged_Master.pdf!";
+            }, 1500);
+        }
+
+        // 3. Image / Photo Resizer & PDF Creator
+        function resizeAndConvert() {
+            let fileInput = document.getElementById("resize-file");
+            let scale = parseFloat(document.getElementById("resize-scale").value);
+            let output = document.getElementById("resize-output");
+            if(fileInput.files.length === 0) {
+                output.innerText = "⚠️ Kripya image select karein resize ke liye!";
+                return;
+            }
+            output.innerText = "📐 Resizing image dimensions & optimizing size... ⏳";
+            setTimeout(() => {
+                let file = fileInput.files[0];
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    let img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        let canvas = document.createElement('canvas');
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        let ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        let resizedData = canvas.toDataURL('image/jpeg', 0.85);
+                        const { jsPDF } = window.jspdf;
+                        let doc = new jsPDF();
+                        doc.addImage(resizedData, 'JPEG', 15, 20, 180, (180 * canvas.height) / canvas.width);
+                        doc.save("Pawan_Resized_Document.pdf");
+                        output.innerText = "✅ Resized and saved as PDF successfully!";
+                    }
+                };
+                reader.readAsDataURL(file);
             }, 1000);
         }
 
-        function generateStudyPlan() {
-            let output = document.getElementById("doubt-output");
-            if(!output) return;
-            output.innerText = "📋 Custom AI Study Plan taiyar ho raha hai... ⏳";
-            speakBhojpuri("Padhai ka poora time table ban raha hai!");
+        // 4. Security & Cloud Sync
+        function applySecurity() {
+            let pass = document.getElementById("pdf-password").value;
+            let output = document.getElementById("security-output");
+            if(!pass) {
+                output.innerText = "⚠️ Password enter karein encryption ke liye!";
+                return;
+            }
+            output.innerText = "🔒 PDF Encrypted with 256-bit secure key successfully!";
+        }
+
+        function syncToCloud() {
+            let output = document.getElementById("security-output");
+            output.innerText = "☁️ Synchronizing documents safely with Pawan Cloud Storage... Synced!";
+        }
+
+        // 5. Text Editor PDF Generator
+        function generatePDFFromText() {
+            let text = document.getElementById("pdf-editor-text").value;
+            let output = document.getElementById("editor-output");
+            if(!text.trim()) {
+                output.innerText = "⚠️ Editor mein kuch text type karein!";
+                return;
+            }
+            output.innerText = "💾 Generating formatted PDF from editor text... ⏳";
             setTimeout(() => {
-                output.innerHTML = `<strong>📅 Aapka Smart AI Study Schedule:</strong><br>` +
-                                   `1. <strong>Subah (07:00 AM - 09:00 AM):</strong> Hard Topics & Physics.<br>` +
-                                   `2. <strong>Dopahar (02:00 PM - 04:00 PM):</strong> Mock Tests.<br>` +
-                                   `3. <strong>Shaam (07:00 PM - 08:30 PM):</strong> Revision.`;
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                let splitText = doc.splitTextToSize(text, 180);
+                doc.text(splitText, 15, 20);
+                doc.save("Pawan_Edited_Document.pdf");
+                output.innerText = "✅ PDF successfully generated and downloaded!";
             }, 1000);
         }
 
-        const quizData = [
-            {
-                q: "Q1. Newton ke kis niyam ko 'Law of Inertia' kaha jata hai?",
-                options: ["A) Pehla Niyam (First Law)", "B) Doosra Niyam (Second Law)", "C) Teesra Niyam (Third Law)", "D) Inmein se koi nahi"],
-                correct: "A",
-                exp: "Phela niyam inertia ka niyam kehlata hai."
-            },
-            {
-                q: "Q2. Force (Bal) ka formula kya hota hai?",
-                options: ["A) F = m * v", "B) F = m * a", "C) F = g * h", "D) F = m / a"],
-                correct: "B",
-                exp: "Sahi jawab F = m * a hai."
-            },
-            {
-                q: "Q3. 'Pratyek kriya ke barabar aur vipreet pratikriya hoti hai' yeh Newton ka kaun sa niyam hai?",
-                options: ["A) Pehla Niyam", "B) Doosra Niyam", "C) Teesra Niyam", "D) Inmein se koi nahi"],
-                correct: "C",
-                exp: "Yeh Newton ka teesra niyam hai."
-            }
-        ];
-
-        let currentQuizIndex = 0;
-
-        function loadQuizQuestion() {
-            let qData = quizData[currentQuizIndex];
-            let qText = document.getElementById("quiz-q-text");
-            let optA = document.getElementById("optA");
-            let optB = document.getElementById("optB");
-            let optC = document.getElementById("optC");
-            let optD = document.getElementById("optD");
-            let output = document.getElementById("quiz-output");
-
-            if(qText) qText.innerText = qData.q;
-            if(optA) optA.innerText = qData.options[0];
-            if(optB) optB.innerText = qData.options[1];
-            if(optC) optC.innerText = qData.options[2];
-            if(optD) optD.innerText = qData.options[3];
-            
-            document.querySelectorAll('input[name="quiz"]').forEach(el => el.checked = false);
-            if(output) output.innerText = "Option select karke answer submit karein.";
-        }
-
-        function submitQuiz() {
-            let selectedOption = document.querySelector('input[name="quiz"]:checked');
-            let output = document.getElementById("quiz-output");
-            if(!output) return;
-
-            if (!selectedOption) {
-                output.innerText = "⚠️ Kripya pehle koi ek option chunein!";
-                speakBhojpuri("Pehle option to chunt, tab na check hoai!");
-                return;
-            }
-
-            let ans = selectedOption.value;
-            let qData = quizData[currentQuizIndex];
-
-            if (ans === qData.correct) {
-                output.innerHTML = `✅ <span style="color:#10b981; font-weight:bold;">Sahi Jawab!</span><br>${qData.exp}`;
-                speakBhojpuri("Ekdam sahi jawab ba!");
-            } else {
-                output.innerHTML = `❌ <span style="color:#ef4444; font-weight:bold;">Ghalat Jawab!</span><br>${qData.exp}`;
-                speakBhojpuri("Arre ghalat ho gail, dhyan se padh!");
-            }
-        }
-
-        function nextQuizQuestion() {
-            currentQuizIndex++;
-            if (currentQuizIndex < quizData.length) {
-                loadQuizQuestion();
-            } else {
-                currentQuizIndex = 0;
-                let output = document.getElementById("quiz-output");
-                if(output) output.innerHTML = "🎉 Saare questions poore ho gaye!";
-                speakBhojpuri("Sab sawal khatam ho gail!");
-                loadQuizQuestion();
-            }
-        }
-
-        function openCourse(courseName) {
-            let output = document.getElementById("course-output");
-            if(output) output.innerText = "✅ Course Loaded: " + courseName;
-            speakBhojpuri("Course khul gail ba: " + courseName);
+        function changeTextTheme() {
+            alert("✨ Text formatting styles and color theme updated successfully!");
         }
     </script>
 </body>

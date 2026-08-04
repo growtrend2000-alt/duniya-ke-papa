@@ -427,7 +427,6 @@
             document.getElementById("optC").innerText = qData.options[2];
             document.getElementById("optD").innerText = qData.options[3];
             
-            // Clear selections and output
             document.querySelectorAll('input[name="quiz"]').forEach(el => el.checked = false);
             document.getElementById("quiz-output").innerText = "Option select karke answer submit karein.";
         }
@@ -456,7 +455,7 @@
             if (currentQuizIndex < quizData.length) {
                 loadQuizQuestion();
             } else {
-                currentQuizIndex = 0; // Loop back or finish
+                currentQuizIndex = 0;
                 document.getElementById("quiz-output").innerHTML = "🎉 Aapne saare questions poore kar liye hain! Bahut badhiya!";
                 loadQuizQuestion();
             }
@@ -469,3 +468,4 @@
     </script>
 </body>
 </html>
+

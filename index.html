@@ -115,8 +115,6 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
             transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
         }
         .please-btn:hover {
             transform: scale(1.06);
@@ -335,7 +333,7 @@
 </head>
 <body id="main-body">
 
-    <!-- WELCOME POPUP WITH YOUR PHOTO AND 0.35s YOUTUBE SONG LINK -->
+    <!-- WELCOME POPUP WITH YOUR PHOTO -->
     <div id="welcome-popup">
         <div class="popup-content">
             <img src="704.jpg" alt="Pawan Badmose">
@@ -344,17 +342,16 @@
             <div class="popup-btn-box">
                 <!-- Sorry Papa Button -->
                 <button class="sorry-btn" onclick="closePopup()">Sorry Papa</button>
-                <!-- Please Papa Button (Song starts directly at 35 seconds: &t=35s) -->
-                <a href="https://youtu.be/TJHJf8DhDNY?si=TxSWAhsceldlCKuc&t=35s" target="_blank" class="please-btn" onclick="closePopup()">Please Papa ❤️</a>
+                <!-- Please Papa Button (Plays YouTube Song Non-Stop in Loop Hidden from 35s) -->
+                <button class="please-btn" onclick="playEmbeddedSong()">Please Papa ❤️</button>
             </div>
         </div>
     </div>
 
-    <!-- BACKGROUND AUDIO -->
-    <audio loop id="bg-music">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <!-- COMPLETELY HIDDEN YOUTUBE NON-STOP LOOP AUDIO PLAYER -->
+    <div id="hidden-youtube-player" style="position: absolute; width: 0px; height: 0px; overflow: hidden; opacity: 0; pointer-events: none;">
+        <iframe id="yt-iframe" width="0" height="0" src="" title="YouTube audio player" frameborder="0" allow="autoplay; encrypted-media"></iframe>
+    </div>
 
     <header>
         <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
@@ -377,7 +374,7 @@
                 <h2 style="margin:0;">🏃‍♂️ School Boy vs Newton Cartoon Chase</h2>
                 <button onclick="toggleGameSection()" style="background:#ef4444; color:#fff; padding:6px 14px; font-size:0.9rem;">❌ Close</button>
             </div>
-            <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-color);">⚠️ Bach ke bhago! Peeche Newton chase kar raha hai!</p>
+            <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-color);">⚠️ Bach ke bhago! Peeche Newton chase kar raha hai aur bol raha hai!</p>
             <div id="game-container">
                 <div id="newton-chaser" class="game-object">🧙‍♂️</div>
                 <div id="runner" class="game-object">🏃‍♂️</div>
@@ -390,7 +387,7 @@
             </div>
             <div class="game-controls">
                 <button onclick="jump()">⬆️ Jump (Kudo!)</button>
-                <button onclick="startGame()" style="background:#10b981; color:#fff; margin-left:10px;">▶️ Start Game & Play Song</button>
+                <button onclick="startGame()" style="background:#10b981; color:#fff; margin-left:10px;">▶️ Start Game</button>
             </div>
         </div>
 
@@ -436,43 +433,58 @@
     </div>
 
     <script>
-        // Close Welcome Popup Function
-        function closePopup() {
-            document.getElementById("welcome-popup").style.display = "none";
+        // Text-to-Speech Function for Funny Bhojpuri Audio Dialogues
+        function speakBhojpuri(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'hi-IN';
+                utterance.rate = 1.0;
+                utterance.pitch = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
-        // Theme Toggle Function
+        function closePopup() {
+            document.getElementById("welcome-popup").style.display = "none";
+            speakBhojpuri("Sahi hai, game shuru karo ab!");
+        }
+
+        function playEmbeddedSong() {
+            document.getElementById("welcome-popup").style.display = "none";
+            let ytIframe = document.getElementById("yt-iframe");
+            // Non-Stop Loop Enabled using loop=1 and playlist parameter matching the video ID
+            ytIframe.src = "https://www.youtube.com/embed/TJHJf8DhDNY?start=35&autoplay=1&loop=1&playlist=TJHJf8DhDNY";
+            speakBhojpuri("Arre wah! Gaana non-stop background mein baj raha hai, chupchap suno!");
+        }
+
         function toggleTheme() {
             let body = document.getElementById("main-body");
             body.classList.toggle("light-mode");
         }
 
-        // Section Scroll Helper
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Toggle Game Section
         function toggleGameSection() {
             let gameSec = document.getElementById("game-section");
             if (gameSec.classList.contains("fullscreen-game-mode")) {
                 gameSec.classList.remove("fullscreen-game-mode");
                 gameSec.style.display = "none";
-                document.getElementById("bg-music").pause();
             } else {
                 gameSec.style.display = "flex";
                 gameSec.classList.add("fullscreen-game-mode");
+                speakBhojpuri("Aila! Newtonwa peeche padal ba, bhago jaldi!");
             }
         }
 
-        // Game Logic
         let runner = document.getElementById("runner");
         let newtonChaser = document.getElementById("newton-chaser");
         let obstacle = document.getElementById("obstacle");
         let scoreText = document.getElementById("score");
         let highScoreText = document.getElementById("high-score");
         let statusText = document.getElementById("game-status");
-        let bgMusic = document.getElementById("bg-music");
         
         let isJumping = false;
         let score = 0;
@@ -482,6 +494,7 @@
         function jump() {
             if (isJumping) return;
             isJumping = true;
+            speakBhojpuri("Kood gail!");
             let jumpHeight = 0;
             let upInterval = setInterval(() => {
                 if (jumpHeight >= 110) {
@@ -504,11 +517,7 @@
             score = 0;
             scoreText.innerText = "Score: " + score;
             statusText.innerText = "Status: Running...";
-            
-            bgMusic.currentTime = 0;
-            bgMusic.play().catch(error => {
-                console.log("Audio play blocked:", error);
-            });
+            speakBhojpuri("Bhago re baadmaash, Newton aa raha hai!");
 
             let obsPos = 850;
             let newtonPos = 10;
@@ -531,33 +540,36 @@
 
                 let runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue("bottom"));
                 if (obsPos > 65 && obsPos < 115 && runnerBottom <= 35) {
-                    statusText.innerHTML = "💥 Arre badwa newtonwa ke musi aya gaile re bhag sa re! Game Over.";
+                    statusText.innerHTML = "💥 Pakad liya Newtonwa! Game Over.";
                     newtonChaser.style.left = "55px";
                     clearInterval(gameInterval);
-                    bgMusic.pause();
+                    speakBhojpuri("Arre badwa Newtonwa ke mooh pe sev gir gail, pakad lihe ho!");
                 }
             }, 25);
         }
 
-        // Advanced AI Doubt Solver
         function solveDoubt() {
             let query = document.getElementById("doubt-input").value.trim();
             let output = document.getElementById("doubt-output");
             if(query === "") {
                 output.innerText = "⚠️ Kripya pehle apna sawal box mein type karein!";
+                speakBhojpuri("Pehle sawal likh, tab na bataib!");
                 return;
             }
             output.innerText = "🤖 Advanced AI deep analysis kar raha hai... ⏳";
+            speakBhojpuri("Ruko ruko, hum soch rahe hain!");
             setTimeout(() => {
                 output.innerHTML = `<strong>✨ AI Verified Solution:</strong><br>` +
                                    `• <strong>Query:</strong> "${query}"<br>` +
                                    `• <strong>Explanation:</strong> Is sawal ka sateek hal core concepts par adharit hai!`;
+                speakBhojpuri("Lo beta, solution mil gaya!");
             }, 1000);
         }
 
         function generateStudyPlan() {
             let output = document.getElementById("doubt-output");
             output.innerText = "📋 Custom AI Study Plan taiyar ho raha hai... ⏳";
+            speakBhojpuri("Padhai ka poora time table ban raha hai!");
             setTimeout(() => {
                 output.innerHTML = `<strong>📅 Aapka Smart AI Study Schedule:</strong><br>` +
                                    `1. <strong>Subah (07:00 AM - 09:00 AM):</strong> Hard Topics & Physics.<br>` +
@@ -566,7 +578,6 @@
             }, 1000);
         }
 
-        // Quiz Data
         const quizData = [
             {
                 q: "Q1. Newton ke kis niyam ko 'Law of Inertia' kaha jata hai?",
@@ -608,6 +619,7 @@
 
             if (!selectedOption) {
                 output.innerText = "⚠️ Kripya pehle koi ek option chunein!";
+                speakBhojpuri("Pehle option to chunt, tab na check hoai!");
                 return;
             }
 
@@ -616,8 +628,10 @@
 
             if (ans === qData.correct) {
                 output.innerHTML = `✅ <span style="color:#10b981; font-weight:bold;">Sahi Jawab!</span><br>${qData.exp}`;
+                speakBhojpuri("Ekdam sahi jawab ba!");
             } else {
                 output.innerHTML = `❌ <span style="color:#ef4444; font-weight:bold;">Ghalat Jawab!</span><br>${qData.exp}`;
+                speakBhojpuri("Arre ghalat ho gail, dhyan se padh!");
             }
         }
 
@@ -628,6 +642,7 @@
             } else {
                 currentQuizIndex = 0;
                 document.getElementById("quiz-output").innerHTML = "🎉 Saare questions poore ho gaye!";
+                speakBhojpuri("Sab sawal khatam ho gail!");
                 loadQuizQuestion();
             }
         }
@@ -635,6 +650,7 @@
         function openCourse(courseName) {
             let output = document.getElementById("course-output");
             output.innerText = "✅ Course Loaded: " + courseName;
+            speakBhojpuri("Course khul gail ba: " + courseName);
         }
     </script>
 </body>

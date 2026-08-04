@@ -6,23 +6,29 @@
     <title>Duniya Ke Papa - Ultimate Learning & Game Hub</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #fff;
-            --accent-color: #ffeb3b;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --secondary-accent: #f43f5e;
+            --neon-glow: 0 0 20px rgba(56, 189, 248, 0.3);
         }
         .light-mode {
-            --bg-gradient: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            --card-bg: rgba(0, 0, 0, 0.05);
-            --text-color: #333;
-            --accent-color: #0288d1;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --text-color: #0f172a;
+            --accent-color: #0284c7;
+            --secondary-accent: #e11d48;
+            --neon-glow: 0 0 20px rgba(2, 132, 199, 0.2);
         }
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: background 0.3s, color 0.3s, border 0.3s;
         }
         body {
             background: var(--bg-gradient);
@@ -38,120 +44,160 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.88);
+            background: rgba(3, 7, 18, 0.92);
+            backdrop-filter: blur(8px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10000;
         }
         .popup-content {
-            background: #222;
-            border: 3px solid var(--accent-color);
-            padding: 30px;
-            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid var(--accent-color);
+            padding: 35px 25px;
+            border-radius: 24px;
             text-align: center;
-            max-width: 400px;
+            max-width: 420px;
             width: 90%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), var(--neon-glow);
         }
         .popup-content img {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #00e676;
-            margin-bottom: 15px;
+            border: 4px solid var(--accent-color);
+            margin-bottom: 18px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
         }
         .popup-content h2 {
             color: var(--accent-color);
-            margin-bottom: 8px;
-            font-size: 1.8rem;
+            margin-bottom: 6px;
+            font-size: 2rem;
+            letter-spacing: 0.5px;
         }
         .popup-content p {
-            color: #fff;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        .popup-btn-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         .sorry-btn {
-            background: #ff5252;
+            background: #ef4444;
             color: #fff;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 12px 24px;
+            font-size: 1.05rem;
             font-weight: bold;
-            border-radius: 30px;
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 82, 82, 0.4);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
             transition: 0.3s;
         }
         .sorry-btn:hover {
-            transform: scale(1.08);
-            background: #ff1744;
+            transform: scale(1.06);
+            background: #dc2626;
+        }
+        .please-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .please-btn:hover {
+            transform: scale(1.06);
+            background: linear-gradient(135deg, #059669, #047857);
         }
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             position: relative;
         }
         header h1 {
-            font-size: 2.4rem;
-            color: var(--accent-color);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        header p {
+            color: #94a3b8;
+            margin-top: 5px;
+            font-size: 1.05rem;
         }
         .theme-toggle {
             position: absolute;
             top: 0;
             right: 10px;
-            background: var(--accent-color);
-            color: #333;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 10px 18px;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
         }
         .container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
         }
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border-radius: 16px;
-            padding: 22px;
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
         }
         .card h2 {
-            margin-bottom: 15px;
-            color: #00e676;
-            font-size: 1.5rem;
+            margin-bottom: 18px;
+            color: var(--accent-color);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .nav-buttons {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 14px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
         .nav-btn {
-            background: #00e676;
-            color: #111;
-            padding: 12px 22px;
-            border-radius: 30px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+            padding: 14px 26px;
+            border-radius: 50px;
             font-weight: bold;
             text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0,230,118,0.3);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
             border: none;
             cursor: pointer;
             transition: 0.3s;
+            font-size: 1.05rem;
         }
         .nav-btn:hover {
-            background: #00c853;
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
         }
 
         /* FULL SCREEN TEMPLE RUN STYLE GAME OVERLAY */
@@ -165,9 +211,9 @@
             width: 100vw !important;
             height: 100vh !important;
             z-index: 9999;
-            background: #111 !important;
+            background: #030712 !important;
             border-radius: 0 !important;
-            padding: 20px !important;
+            padding: 25px !important;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -176,15 +222,16 @@
             position: relative;
             width: 100%;
             flex-grow: 1;
-            background: linear-gradient(to bottom, #111, #333);
-            border-radius: 10px;
+            background: linear-gradient(to bottom, #0f172a, #1e293b);
+            border-radius: 14px;
             overflow: hidden;
             border: 2px solid var(--accent-color);
             margin-bottom: 15px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
         }
         .game-object {
             position: absolute;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
         }
         #runner {
             bottom: 20px;
@@ -205,86 +252,106 @@
         }
         button {
             background: var(--accent-color);
-            color: #333;
+            color: #0f172a;
             border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            border-radius: 6px;
+            padding: 12px 22px;
+            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 1rem;
             transition: 0.3s;
         }
         button:hover {
-            transform: scale(1.05);
+            transform: scale(1.04);
+            opacity: 0.9;
         }
         input, textarea {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border: none;
+            padding: 14px;
+            margin-bottom: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
             outline: none;
-            color: #333;
-            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.05);
             font-size: 1rem;
         }
+        input:focus, textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
         .output-box {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            min-height: 45px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--card-border);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 14px;
+            min-height: 50px;
             line-height: 1.6;
+            color: #cbd5e1;
         }
         .course-list {
             list-style: none;
         }
         .course-list li {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: 0.2s;
+            font-weight: 500;
         }
         .course-list li:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-color);
+            transform: translateX(5px);
         }
         .quiz-question {
-            font-size: 1.15rem;
-            margin-bottom: 12px;
-            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
         }
         .quiz-options label {
             display: block;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-radius: 10px;
             cursor: pointer;
             transition: 0.2s;
         }
         .quiz-options label:hover {
-            background: rgba(255, 255, 255, 0.22);
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-color);
         }
         .quiz-options input {
             width: auto;
-            margin-right: 10px;
+            margin-right: 12px;
         }
     </style>
 </head>
 <body id="main-body">
 
+    <!-- WELCOME POPUP WITH YOUR PHOTO AND 0.35s YOUTUBE SONG LINK -->
     <div id="welcome-popup">
         <div class="popup-content">
-            <img src="674.jpg" alt="Pawan Badmose">
+            <img src="704.jpg" alt="Pawan Badmose">
             <h2>Pawan Badmose</h2>
             <p>Duniya Ke Papa</p>
-            <button class="sorry-btn" onclick="closePopup()">Sorry Papa</button>
+            <div class="popup-btn-box">
+                <!-- Sorry Papa Button -->
+                <button class="sorry-btn" onclick="closePopup()">Sorry Papa</button>
+                <!-- Please Papa Button (Song starts directly at 35 seconds: &t=35s) -->
+                <a href="https://youtu.be/TJHJf8DhDNY?si=TxSWAhsceldlCKuc&t=35s" target="_blank" class="please-btn" onclick="closePopup()">Please Papa ❤️</a>
+            </div>
         </div>
     </div>
 
-    <audio autoplay loop id="bg-music">
+    <!-- BACKGROUND AUDIO -->
+    <audio loop id="bg-music">
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -297,18 +364,20 @@
 
     <div class="container">
 
+        <!-- NAVIGATION BUTTONS -->
         <div class="nav-buttons">
             <button class="nav-btn" onclick="toggleGameSection()">🎮 Play Newton Game</button>
-            <button class="nav-btn" style="background:#ffeb3b; color:#111;" onclick="scrollToSection('ai-section')">🤖 AI Doubt & Plan</button>
-            <button class="nav-btn" style="background:#00b0ff; color:#fff;" onclick="scrollToSection('quiz-section')">📝 Smart Mock Test</button>
+            <button class="nav-btn" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="scrollToSection('ai-section')">🤖 AI Doubt & Plan</button>
+            <button class="nav-btn" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);" onclick="scrollToSection('quiz-section')">📝 Smart Mock Test</button>
         </div>
 
+        <!-- GAME SECTION -->
         <div class="card" id="game-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h2 style="margin:0;">🏃‍♂️ School Boy vs Newton Cartoon Chase</h2>
-                <button onclick="toggleGameSection()" style="background:#ff5252; color:#fff; padding:6px 12px; font-size:0.9rem;">❌ Close Fullscreen</button>
+                <button onclick="toggleGameSection()" style="background:#ef4444; color:#fff; padding:6px 14px; font-size:0.9rem;">❌ Close</button>
             </div>
-            <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--accent-color);">⚠️ Bach ke bhago! Peeche Newton chase kar raha hai!</p>
+            <p style="font-size: 0.95rem; margin-bottom: 12px; color: var(--accent-color);">⚠️ Bach ke bhago! Peeche Newton chase kar raha hai!</p>
             <div id="game-container">
                 <div id="newton-chaser" class="game-object">🧙‍♂️</div>
                 <div id="runner" class="game-object">🏃‍♂️</div>
@@ -317,24 +386,26 @@
             <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
                 <span id="score">Score: 0</span>
                 <span id="high-score">High Score: 0</span>
-                <span id="game-status" style="color: #ffeb3b;">Status: Ready</span>
+                <span id="game-status" style="color: #38bdf8;">Status: Ready</span>
             </div>
             <div class="game-controls">
                 <button onclick="jump()">⬆️ Jump (Kudo!)</button>
-                <button onclick="startGame()" style="background:#00e676; color:#fff; margin-left:10px;">▶️ Start Game</button>
+                <button onclick="startGame()" style="background:#10b981; color:#fff; margin-left:10px;">▶️ Start Game & Play Song</button>
             </div>
         </div>
 
+        <!-- AI DOUBT SOLVER & STUDY PLANNER -->
         <div class="card" id="ai-section">
             <h2>🤖 Advanced AI Doubt Solver & Study Planner</h2>
             <textarea id="doubt-input" rows="3" placeholder="Apna sawal yahan likhein ya AI se study plan maangein..."></textarea>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="solveDoubt()" style="flex:1;">Ask AI Solution</button>
-                <button onclick="generateStudyPlan()" style="background:#00e676; color:#fff; flex:1;">Generate Study Plan 📋</button>
+                <button onclick="solveDoubt()" style="flex:1; background:var(--accent-color);">Ask AI Solution</button>
+                <button onclick="generateStudyPlan()" style="background:#10b981; color:#fff; flex:1;">Generate Study Plan 📋</button>
             </div>
             <div class="output-box" id="doubt-output">AI ka advanced output yahan dikhega...</div>
         </div>
 
+        <!-- UPGRADED MULTI-QUESTION MOCK TEST -->
         <div class="card" id="quiz-section">
             <h2>📝 Smart Mock Test Engine</h2>
             <div class="quiz-question" id="quiz-q-text">Q1. Newton ke kis niyam ko 'Law of Inertia' kaha jata hai?</div>
@@ -344,13 +415,14 @@
                 <label><input type="radio" name="quiz" value="C"> <span id="optC">C) Teesra Niyam (Third Law)</span></label>
                 <label><input type="radio" name="quiz" value="D"> <span id="optD">D) Inmein se koi nahi</span></label>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button onclick="submitQuiz()">Submit Answer</button>
-                <button onclick="nextQuizQuestion()" style="background:#00b0ff; color:#fff;">Next Question ➡</button>
+            <div style="display: flex; gap: 10px; margin-top: 12px;">
+                <button onclick="submitQuiz()" style="background:var(--accent-color);">Submit Answer</button>
+                <button onclick="nextQuizQuestion()" style="background:#8b5cf6; color:#fff;">Next Question ➡</button>
             </div>
             <div class="output-box" id="quiz-output">Option select karke answer submit karein.</div>
         </div>
 
+        <!-- COURSES SECTION -->
         <div class="card">
             <h2>📚 Popular Learning Courses</h2>
             <ul class="course-list">
@@ -386,19 +458,21 @@
             if (gameSec.classList.contains("fullscreen-game-mode")) {
                 gameSec.classList.remove("fullscreen-game-mode");
                 gameSec.style.display = "none";
+                document.getElementById("bg-music").pause();
             } else {
                 gameSec.style.display = "flex";
                 gameSec.classList.add("fullscreen-game-mode");
             }
         }
 
-        // Game Logic with High Score & Bhojpuri Dialogues
+        // Game Logic
         let runner = document.getElementById("runner");
         let newtonChaser = document.getElementById("newton-chaser");
         let obstacle = document.getElementById("obstacle");
         let scoreText = document.getElementById("score");
         let highScoreText = document.getElementById("high-score");
         let statusText = document.getElementById("game-status");
+        let bgMusic = document.getElementById("bg-music");
         
         let isJumping = false;
         let score = 0;
@@ -430,6 +504,12 @@
             score = 0;
             scoreText.innerText = "Score: " + score;
             statusText.innerText = "Status: Running...";
+            
+            bgMusic.currentTime = 0;
+            bgMusic.play().catch(error => {
+                console.log("Audio play blocked:", error);
+            });
+
             let obsPos = 850;
             let newtonPos = 10;
             clearInterval(gameInterval);
@@ -451,10 +531,10 @@
 
                 let runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue("bottom"));
                 if (obsPos > 65 && obsPos < 115 && runnerBottom <= 35) {
-                    // Exact Bhojpuri Dialogue on Loss
                     statusText.innerHTML = "💥 Arre badwa newtonwa ke musi aya gaile re bhag sa re! Game Over.";
                     newtonChaser.style.left = "55px";
                     clearInterval(gameInterval);
+                    bgMusic.pause();
                 }
             }, 25);
         }
@@ -471,41 +551,40 @@
             setTimeout(() => {
                 output.innerHTML = `<strong>✨ AI Verified Solution:</strong><br>` +
                                    `• <strong>Query:</strong> "${query}"<br>` +
-                                   `• <strong>Step-by-Step Explanation:</strong> Is samasya ka mukhyatah adhar scientific aur logical rules par nirbhar karta hai. Sateek hal ke liye core concepts ko clear karein!`;
+                                   `• <strong>Explanation:</strong> Is sawal ka sateek hal core concepts par adharit hai!`;
             }, 1000);
         }
 
-        // AI Study Planner Generator
         function generateStudyPlan() {
             let output = document.getElementById("doubt-output");
             output.innerText = "📋 Custom AI Study Plan taiyar ho raha hai... ⏳";
             setTimeout(() => {
                 output.innerHTML = `<strong>📅 Aapka Smart AI Study Schedule:</strong><br>` +
-                                   `1. <strong>Subah (07:00 AM - 09:00 AM):</strong> Hard Topics & Physics / Math Concepts.<br>` +
-                                   `2. <strong>Dopahar (02:00 PM - 04:00 PM):</strong> Mock Tests & Practice Questions.<br>` +
-                                   `3. <strong>Shaam (07:00 PM - 08:30 PM):</strong> Revision & AI Doubt Clearing.`;
+                                   `1. <strong>Subah (07:00 AM - 09:00 AM):</strong> Hard Topics & Physics.<br>` +
+                                   `2. <strong>Dopahar (02:00 PM - 04:00 PM):</strong> Mock Tests.<br>` +
+                                   `3. <strong>Shaam (07:00 PM - 08:30 PM):</strong> Revision.`;
             }, 1000);
         }
 
-        // Upgraded Multi-Question Mock Test Data
+        // Quiz Data
         const quizData = [
             {
                 q: "Q1. Newton ke kis niyam ko 'Law of Inertia' kaha jata hai?",
                 options: ["A) Pehla Niyam (First Law)", "B) Doosra Niyam (Second Law)", "C) Teesra Niyam (Third Law)", "D) Inmein se koi nahi"],
                 correct: "A",
-                exp: "Phela niyam inertia ka niyam kehlata hai kyunki yeh vastu ki sthir avastha banaye rakhne ki pravriti ko batata hai."
+                exp: "Phela niyam inertia ka niyam kehlata hai."
             },
             {
-                q: "Q2. Force (Bal) ka formula kya hota hai (Newton ke second law ke mutabik)?",
+                q: "Q2. Force (Bal) ka formula kya hota hai?",
                 options: ["A) F = m * v", "B) F = m * a", "C) F = g * h", "D) F = m / a"],
                 correct: "B",
-                exp: "Sahi jawab F = m * a (Mass × Acceleration) hai jo Newton ke doosre niyam par adharit hai."
+                exp: "Sahi jawab F = m * a hai."
             },
             {
                 q: "Q3. 'Pratyek kriya ke barabar aur vipreet pratikriya hoti hai' yeh Newton ka kaun sa niyam hai?",
                 options: ["A) Pehla Niyam", "B) Doosra Niyam", "C) Teesra Niyam", "D) Inmein se koi nahi"],
                 correct: "C",
-                exp: "Yeh Newton ka teesra niyam (Third Law of Motion) hai (Action and Reaction)."
+                exp: "Yeh Newton ka teesra niyam hai."
             }
         ];
 
@@ -536,9 +615,9 @@
             let qData = quizData[currentQuizIndex];
 
             if (ans === qData.correct) {
-                output.innerHTML = `✅ <span style="color:#00e676; font-weight:bold;">Sahi Jawab! (Correct)</span><br><strong>Explanation:</strong> ${qData.exp}`;
+                output.innerHTML = `✅ <span style="color:#10b981; font-weight:bold;">Sahi Jawab!</span><br>${qData.exp}`;
             } else {
-                output.innerHTML = `❌ <span style="color:#ff5252; font-weight:bold;">Ghalat Jawab! (Incorrect)</span><br><strong>Explanation:</strong> ${qData.exp}`;
+                output.innerHTML = `❌ <span style="color:#ef4444; font-weight:bold;">Ghalat Jawab!</span><br>${qData.exp}`;
             }
         }
 
@@ -548,14 +627,14 @@
                 loadQuizQuestion();
             } else {
                 currentQuizIndex = 0;
-                document.getElementById("quiz-output").innerHTML = "🎉 Aapne saare questions poore kar liye hain! Bahut badhiya!";
+                document.getElementById("quiz-output").innerHTML = "🎉 Saare questions poore ho gaye!";
                 loadQuizQuestion();
             }
         }
 
         function openCourse(courseName) {
             let output = document.getElementById("course-output");
-            output.innerText = "✅ Course Loaded: " + courseName + " - Ab aap seekhna shuru kar sakte hain!";
+            output.innerText = "✅ Course Loaded: " + courseName;
         }
     </script>
 </body>

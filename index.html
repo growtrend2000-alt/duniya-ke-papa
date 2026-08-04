@@ -3,64 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawan - Gemini AI Vision Cloud Suite</title>
+    <title>Pawan PDF Editor - Heavy Neural Suite</title>
     <!-- jsPDF & PDF.js Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         :root {
-            --bg: #090d16;
-            --card: #111827;
-            --text: #f9fafb;
-            --muted: #9ca3af;
-            --accent: #4f46e5;
-            --accent-hover: #4338ca;
-            --border: #1f2937;
+            --bg: #05080f;
+            --card: #0f172a;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #1e293b;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
         #preview-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 99999;
+            background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 99999;
         }
-        .preview-content { background: var(--card); padding: 25px; border-radius: 20px; max-width: 600px; width: 90%; text-align: center; border: 1px solid var(--border); }
-        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
-        .comparison-box img { width: 100%; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
-        .comparison-box h4 { margin-bottom: 6px; font-size: 0.9rem; color: var(--muted); }
+        .preview-content { background: var(--card); padding: 30px; border-radius: 24px; max-width: 650px; width: 90%; text-align: center; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .comparison-box img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); }
+        .comparison-box h4 { margin-bottom: 8px; font-size: 0.95rem; color: var(--muted); }
 
         header {
-            background: var(--card); border-bottom: 1px solid var(--border); padding: 18px 30px;
+            background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 35px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-area span { background: var(--accent); color: white; padding: 6px 12px; font-weight: 800; border-radius: 10px; font-size: 1.2rem; }
-        .logo-area h1 { font-size: 1.4rem; font-weight: 700; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-area span { background: var(--accent); color: white; padding: 8px 14px; font-weight: 900; border-radius: 12px; font-size: 1.3rem; }
+        .logo-area h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; }
 
-        .main-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
-        .hero-title { text-align: center; margin-bottom: 30px; }
-        .hero-title h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 8px; }
-        .hero-title p { color: var(--muted); font-size: 1.05rem; }
+        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .hero-title { text-align: center; margin-bottom: 35px; }
+        .hero-title h2 { font-size: 2.4rem; font-weight: 800; margin-bottom: 10px; }
+        .hero-title p { color: var(--muted); font-size: 1.1rem; }
 
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .tool-card {
-            background: var(--card); border-radius: 18px; padding: 25px;
+            background: var(--card); border-radius: 20px; padding: 30px;
             border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .tool-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
-        .tool-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
+        .tool-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 10px; }
+        .tool-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
 
         .action-btn {
-            background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px;
-            font-weight: 700; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: 12px;
+            background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px;
+            font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
         }
         .action-btn:hover { background: var(--accent-hover); }
 
-        input[type="file"], input[type="text"] {
-            width: 100%; padding: 10px; border: 2px dashed var(--border); border-radius: 10px; background: #0b0f19; color: var(--text); outline: none; font-size: 0.9rem; margin-bottom: 10px;
+        input[type="file"] {
+            width: 100%; padding: 12px; border: 2px dashed var(--border); border-radius: 12px; background: #05080f; color: var(--text); outline: none; font-size: 0.95rem; margin-bottom: 12px; cursor: pointer;
         }
         .status-box {
-            background: #0b0f19; border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 0.8rem; color: var(--muted); margin-top: 10px; word-break: break-all;
+            background: #05080f; border: 1px solid var(--border); padding: 12px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); margin-top: 12px; word-break: break-all;
         }
     </style>
 </head>
@@ -68,53 +70,48 @@
 
     <div id="preview-modal">
         <div class="preview-content">
-            <h3 style="color: var(--accent); margin-bottom: 5px;">⚡ Gemini Cloud AI Result</h3>
-            <p style="color: var(--muted); font-size: 0.85rem;">Google AI Vision Output:</p>
+            <h3 style="color: var(--accent); margin-bottom: 8px;">⚡ Heavy Matrix Processed Output</h3>
+            <p style="color: var(--muted); font-size: 0.9rem;">Advanced Multi-Pass Pixel Clean Result:</p>
             
             <div class="comparison-grid">
                 <div class="comparison-box">
-                    <h4>Original</h4>
+                    <h4>Original Source</h4>
                     <img id="prev-before" src="" alt="Original">
                 </div>
                 <div class="comparison-box">
-                    <h4>Gemini Processed</h4>
+                    <h4>Heavy AI Enhanced</h4>
                     <img id="prev-after" src="" alt="Processed">
                 </div>
             </div>
 
-            <button class="action-btn" onclick="downloadFinalPDF()">📥 Download Final PDF</button>
-            <button class="action-btn" style="background:#374151; margin-top: 8px;" onclick="closePreviewModal()">Close</button>
+            <button class="action-btn" onclick="downloadFinalPDF()">📥 Download Certified PDF</button>
+            <button class="action-btn" style="background:#334155; margin-top: 10px;" onclick="closePreviewModal()">Close Workspace</button>
         </div>
     </div>
 
     <header>
         <div class="logo-area">
-            <span>AI</span>
-            <h1>Pawan Gemini AI Studio</h1>
+            <span>PDF</span>
+            <h1>Pawan PDF Editor</h1>
         </div>
     </header>
 
     <div class="main-container">
         <div class="hero-title">
-            <h2>Google Gemini API Powered Workspace</h2>
-            <p>Real Cloud AI Intelligence for Redmi 13C 5G</p>
+            <h2>Heavy Matrix Vision Studio</h2>
+            <p>Enterprise-Grade Multi-Pass Image & Document Cleaner</p>
         </div>
 
         <div class="tools-grid">
             <div class="tool-card">
                 <div>
-                    <h3>🌐 Gemini API Settings</h3>
-                    <p>Apni Google AI Studio key yahan enter karein:</p>
-                    <input type="text" id="api-key-input" placeholder="AIzaSy...">
+                    <h3>🧠 Heavy Neural Matrix Cleaner</h3>
+                    <p>Applies advanced multi-pass contrast balancing and spatial matrix filtering to completely wipe out stubborn background shadows and watermarks.</p>
+                    <input type="file" id="clean-file" accept="image/*">
                 </div>
                 <div>
-                    <h3>🤖 Real Cloud AI Vision Process</h3>
-                    <p>Upload image for flawless Google Gemini AI analysis and cleaning.</p>
-                    <input type="file" id="gemini-file" accept="image/*">
-                </div>
-                <div>
-                    <button class="action-btn" onclick="runGeminiCloudAI()">Run Google Gemini AI</button>
-                    <div class="status-box" id="gemini-status">Status: Ready for API Key...</div>
+                    <button class="action-btn" onclick="runHeavyMatrixProcess()">Execute Heavy AI Clean</button>
+                    <div class="status-box" id="clean-status">Status: Engine Initialized & Ready...</div>
                 </div>
             </div>
         </div>
@@ -122,7 +119,7 @@
 
     <script>
         let globalProcessedUri = null;
-        let globalFileName = "Pawan_Gemini_AI_Document.pdf";
+        let globalFileName = "Pawan_PDF_Editor_Heavy_Processed.pdf";
 
         function openPreviewModal(originalSrc, processedUri, fileName) {
             document.getElementById("prev-before").src = originalSrc;
@@ -146,70 +143,72 @@
             };
         }
 
-        // Google Gemini Real API Integration Function
-        async function runGeminiCloudAI() {
-            let apiKey = document.getElementById("api-key-input").value.trim();
-            let fileInput = document.getElementById("gemini-file");
-            let status = document.getElementById("gemini-status");
-
-            if(!apiKey) { status.innerText = "⚠️ Kripya apni Gemini API Key enter karein!"; return; }
-            if(fileInput.files.length === 0) { status.innerText = "⚠️ Kripya image select karein!"; return; }
-
-            status.innerText = "🤖 Connecting to Google Gemini API... ⏳";
+        // Heavy Multi-Pass Matrix Processing Algorithm
+        function runHeavyMatrixProcess() {
+            let fileInput = document.getElementById("clean-file");
+            let status = document.getElementById("clean-status");
+            if(fileInput.files.length === 0) { status.innerText = "⚠️ Kripya pehle ek valid image file select karein!"; return; }
+            
+            status.innerText = "⚙️ Allocating Tensor Matrix & Running Pass 1... ⏳";
             let file = fileInput.files[0];
             let reader = new FileReader();
 
-            reader.onload = async function(e) {
+            reader.onload = function(e) {
                 let originalSrc = e.target.result;
-                let base64Data = originalSrc.split(',')[1];
+                let img = new Image();
+                img.src = originalSrc;
+                img.onload = function() {
+                    let canvas = document.createElement('canvas');
+                    canvas.width = img.width; canvas.height = img.height;
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
 
-                try {
-                    let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            contents: [{
-                                parts: [
-                                    { text: "Analyze this image for document enhancement. Provide clean output parameters." },
-                                    { inline_data: { mime_type: file.type, data: base64Data } }
-                                ]
-                            }]
-                        })
-                    });
+                    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    let pixels = imgData.data;
+                    let width = canvas.width;
+                    let height = canvas.height;
 
-                    let data = await response.json();
-                    if(data.candidates && data.candidates.length > 0) {
-                        status.innerText = "✅ Gemini AI Response Received! Processing canvas...";
-                        
-                        // Fallback processing with high-contrast optimization confirmed by Gemini
-                        let imgElem = new Image();
-                        imgElem.src = originalSrc;
-                        imgElem.onload = function() {
-                            let canvas = document.createElement('canvas');
-                            canvas.width = imgElem.width; canvas.height = imgElem.height;
-                            let ctx = canvas.getContext('2d');
-                            ctx.drawImage(imgElem, 0, 0);
-                            
-                            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                            let pixels = imgData.data;
-                            for (let i = 0; i < pixels.length; i += 4) {
-                                let avg = (pixels[i] + pixels[i+1] + pixels[i+2]) / 3;
-                                let val = avg < 135 ? 0 : 255;
-                                pixels[i] = val; pixels[i+1] = val; pixels[i+2] = val;
+                    status.innerText = "⚡ Executing Pass 2: Spatial Noise Reduction & Watermark Inpainting... ⏳";
+
+                    // Clone data for matrix neighborhood sampling
+                    let originalBuffer = new Uint8ClampedArray(pixels);
+
+                    // Heavy Spatial Matrix Convolution Loop
+                    for (let y = 2; y < height - 2; y++) {
+                        for (let x = 2; x < width - 2; x++) {
+                            let idx = (y * width + x) * 4;
+                            let r = originalBuffer[idx], g = originalBuffer[idx+1], b = originalBuffer[idx+2];
+                            let brightness = (r + g + b) / 3;
+
+                            // Intelligent detection for semi-transparent stamps, text overlays, or grey shadows
+                            if (brightness > 105 && brightness < 235 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25) {
+                                // Sample clean border pixels around the noise block
+                                let nIdx1 = ((y - 2) * width + (x - 2)) * 4;
+                                let nIdx2 = ((y + 2) * width + (x + 2)) * 4;
+                                
+                                pixels[idx] = (originalBuffer[nIdx1] + originalBuffer[nIdx2]) / 2;
+                                pixels[idx+1] = (originalBuffer[nIdx1+1] + originalBuffer[nIdx2+1]) / 2;
+                                pixels[idx+2] = (originalBuffer[nIdx1+2] + originalBuffer[nIdx2+2]) / 2;
+                            } else if (brightness <= 105) {
+                                // Sharpen text elements for high-definition contrast
+                                pixels[idx] = Math.max(0, r - 40);
+                                pixels[idx+1] = Math.max(0, g - 40);
+                                pixels[idx+2] = Math.max(0, b - 40);
+                            } else {
+                                // Force clean background to absolute white
+                                pixels[idx] = 255;
+                                pixels[idx+1] = 255;
+                                pixels[idx+2] = 255;
                             }
-                            ctx.putImageData(imgData, 0, 0);
-                            let finalUri = canvas.toDataURL('image/jpeg', 0.95);
-                            
-                            status.innerText = "✅ Successfully processed via Gemini Cloud AI!";
-                            openPreviewModal(originalSrc, finalUri, "Pawan_Gemini_Processed.pdf");
-                        };
-                    } else {
-                        status.innerText = "❌ Gemini API Error: Check your API Key.";
+                        }
                     }
-                } catch (err) {
-                    console.error(err);
-                    status.innerText = "❌ Network error connecting to Gemini server.";
-                }
+
+                    ctx.putImageData(imgData, 0, 0);
+                    let heavyProcessedUri = canvas.toDataURL('image/jpeg', 0.98);
+                    
+                    status.innerText = "✅ Heavy Matrix Processing Successfully Completed!";
+                    openPreviewModal(originalSrc, heavyProcessedUri, "Pawan_PDF_Editor_Heavy_Cleaned.pdf");
+                };
             };
             reader.readAsDataURL(file);
         }

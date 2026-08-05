@@ -3,211 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawan PDF Editor - Heavy Neural Suite</title>
-    <!-- jsPDF & PDF.js Libraries -->
+    <title>PDF editor - Advanced Document Suite</title>
+    <!-- jsPDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         :root {
-            --bg: #05080f;
-            --card: #0f172a;
-            --text: #f8fafc;
-            --muted: #94a3b8;
+            --bg: #090d16;
+            --card: #111827;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
             --accent: #6366f1;
             --accent-hover: #4f46e5;
-            --border: #1e293b;
+            --success: #10b981;
+            --border: #1f2937;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
+        /* Welcome Popup */
+        #welcome-popup {
+            display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 999999;
+        }
+        .welcome-content { background: var(--card); padding: 35px; border-radius: 20px; max-width: 450px; width: 90%; text-align: center; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .welcome-img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 15px; }
+        .welcome-content h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-content p { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; font-weight: 600; }
+
+        /* Preview Modal */
         #preview-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 99999;
+            background: rgba(3, 7, 18, 0.92); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 99999;
         }
-        .preview-content { background: var(--card); padding: 30px; border-radius: 24px; max-width: 650px; width: 90%; text-align: center; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .preview-content { background: var(--card); padding: 30px; border-radius: 20px; max-width: 680px; width: 90%; text-align: center; border: 1px solid var(--border); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .comparison-box img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); }
-        .comparison-box h4 { margin-bottom: 8px; font-size: 0.95rem; color: var(--muted); }
+        .comparison-box img { width: 100%; height: 180px; object-fit: contain; background: #000; border-radius: 12px; border: 1px solid var(--border); }
+        .comparison-box h4 { margin-bottom: 6px; font-size: 0.9rem; color: var(--muted); }
 
         header {
-            background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 35px;
+            background: var(--card); border-bottom: 1px solid var(--border); padding: 18px 30px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .logo-area { display: flex; align-items: center; gap: 12px; }
-        .logo-area span { background: var(--accent); color: white; padding: 8px 14px; font-weight: 900; border-radius: 12px; font-size: 1.3rem; }
-        .logo-area h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: 0.5px; }
+        .logo-area span { background: linear-gradient(135deg, #6366f1, #a855f7); color: white; padding: 8px 14px; font-weight: 900; border-radius: 10px; font-size: 1.2rem; }
+        .logo-area h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; }
 
-        .main-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         .hero-title { text-align: center; margin-bottom: 35px; }
-        .hero-title h2 { font-size: 2.4rem; font-weight: 800; margin-bottom: 10px; }
-        .hero-title p { color: var(--muted); font-size: 1.1rem; }
+        .hero-title h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 8px; background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-title p { color: var(--muted); font-size: 1.05rem; }
 
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
         .tool-card {
-            background: var(--card); border-radius: 20px; padding: 30px;
+            background: var(--card); border-radius: 18px; padding: 25px;
             border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: transform 0.2s;
         }
-        .tool-card h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 10px; }
-        .tool-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+        .tool-card:hover { border-color: #374151; transform: translateY(-3px); }
+        .tool-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        .tool-card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
 
         .action-btn {
-            background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px;
-            font-weight: 700; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; border: none; padding: 12px; border-radius: 10px;
+            font-weight: 700; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); transition: opacity 0.2s;
         }
-        .action-btn:hover { background: var(--accent-hover); }
+        .action-btn:hover { opacity: 0.9; }
+        .action-btn.success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .action-btn.secondary { background: #334155; box-shadow: none; }
+        .action-btn.secondary:hover { background: #475569; }
 
         input[type="file"] {
-            width: 100%; padding: 12px; border: 2px dashed var(--border); border-radius: 12px; background: #05080f; color: var(--text); outline: none; font-size: 0.95rem; margin-bottom: 12px; cursor: pointer;
+            width: 100%; padding: 10px; border: 2px dashed var(--border); border-radius: 10px; background: #090d16; color: var(--text); outline: none; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer;
         }
         .status-box {
-            background: #05080f; border: 1px solid var(--border); padding: 12px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); margin-top: 12px; word-break: break-all;
+            background: #090d16; border: 1px solid var(--border); padding: 8px; border-radius: 6px; font-size: 0.75rem; color: var(--muted); margin-top: 8px; word-break: break-all;
         }
     </style>
 </head>
 <body>
 
+    <!-- Welcome Popup -->
+    <div id="welcome-popup">
+        <div class="welcome-content">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80" alt="Creator Photo" class="welcome-img">
+            <h2>PDF editor</h2>
+            <p>made by pawan</p>
+            <button class="action-btn success" onclick="closeWelcomePopup()">Thanks</button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
     <div id="preview-modal">
         <div class="preview-content">
-            <h3 style="color: var(--accent); margin-bottom: 8px;">⚡ Heavy Matrix Processed Output</h3>
-            <p style="color: var(--muted); font-size: 0.9rem;">Advanced Multi-Pass Pixel Clean Result:</p>
+            <h3 style="color: #818cf8; margin-bottom: 6px;" id="modal-title">⚡ PDF editor Result</h3>
+            <p style="color: var(--muted); font-size: 0.85rem;">Before & After Comparison Preview:</p>
             
             <div class="comparison-grid">
                 <div class="comparison-box">
-                    <h4>Original Source</h4>
+                    <h4>Original</h4>
                     <img id="prev-before" src="" alt="Original">
                 </div>
                 <div class="comparison-box">
-                    <h4>Heavy AI Enhanced</h4>
+                    <h4>Processed Result</h4>
                     <img id="prev-after" src="" alt="Processed">
                 </div>
             </div>
 
-            <button class="action-btn" onclick="downloadFinalPDF()">📥 Download Certified PDF</button>
-            <button class="action-btn" style="background:#334155; margin-top: 10px;" onclick="closePreviewModal()">Close Workspace</button>
+            <button class="action-btn success" onclick="downloadFinalOutput()">📥 Download Result</button>
+            <button class="action-btn secondary" style="margin-top: 8px;" onclick="closePreviewModal()">Close Workspace</button>
         </div>
     </div>
 
     <header>
         <div class="logo-area">
             <span>PDF</span>
-            <h1>Pawan PDF Editor</h1>
+            <h1>PDF editor</h1>
         </div>
     </header>
 
     <div class="main-container">
         <div class="hero-title">
-            <h2>Heavy Matrix Vision Studio</h2>
-            <p>Enterprise-Grade Multi-Pass Image & Document Cleaner</p>
+            <h2>Advanced PDF & Document Suite</h2>
+            <p>Clean watermarks, enhance document contrast, compress images, and convert to PDF instantly</p>
         </div>
 
         <div class="tools-grid">
+            <!-- Feature 1: Watermark Remover -->
             <div class="tool-card">
                 <div>
-                    <h3>🧠 Heavy Neural Matrix Cleaner</h3>
-                    <p>Applies advanced multi-pass contrast balancing and spatial matrix filtering to completely wipe out stubborn background shadows and watermarks.</p>
-                    <input type="file" id="clean-file" accept="image/*">
+                    <h3>✨ Smart Watermark Remover</h3>
+                    <p>Advanced filtering to clean text overlays and background watermarks.</p>
+                    <input type="file" id="file-wm" accept="image/*">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="runHeavyMatrixProcess()">Execute Heavy AI Clean</button>
-                    <div class="status-box" id="clean-status">Status: Engine Initialized & Ready...</div>
+                    <button class="action-btn" onclick="processTool('watermark')">Remove Watermark</button>
+                    <div class="status-box" id="status-wm">Status: Ready</div>
+                </div>
+            </div>
+
+            <!-- Feature 2: High Contrast Enhancer -->
+            <div class="tool-card">
+                <div>
+                    <h3>🔍 Document Contrast Enhancer</h3>
+                    <p>Sharpen blurry text and brighten faded paper backgrounds instantly.</p>
+                    <input type="file" id="file-contrast" accept="image/*">
+                </div>
+                <div>
+                    <button class="action-btn" onclick="processTool('contrast')">Enhance Contrast</button>
+                    <div class="status-box" id="status-contrast">Status: Ready</div>
+                </div>
+            </div>
+
+            <!-- Feature 3: Image Size Compressor -->
+            <div class="tool-card">
+                <div>
+                    <h3>📉 Pro Image Compressor</h3>
+                    <p>Shrink file sizes efficiently while maintaining standard document clarity.</p>
+                    <input type="file" id="file-compress" accept="image/*">
+                </div>
+                <div>
+                    <button class="action-btn" onclick="processTool('compress')">Compress Image</button>
+                    <div class="status-box" id="status-compress">Status: Ready</div>
+                </div>
+            </div>
+
+            <!-- Feature 4: Direct PDF Converter -->
+            <div class="tool-card">
+                <div>
+                    <h3>📄 Instant Image to PDF</h3>
+                    <p>Convert raw images or cleaned files directly into professional PDF format.</p>
+                    <input type="file" id="file-pdf" accept="image/*">
+                </div>
+                <div>
+                    <button class="action-btn" onclick="processTool('pdf')">Convert to PDF</button>
+                    <div class="status-box" id="status-pdf">Status: Ready</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let globalProcessedUri = null;
-        let globalFileName = "Pawan_PDF_Editor_Heavy_Processed.pdf";
+        function closeWelcomePopup() {
+            document.getElementById("welcome-popup").style.display = "none";
+        }
 
-        function openPreviewModal(originalSrc, processedUri, fileName) {
+        let globalProcessedUri = null;
+        let globalToolType = "";
+        let globalFileName = "document.pdf";
+
+        function openPreviewModal(originalSrc, processedUri, fileName, titleText, toolType) {
             document.getElementById("prev-before").src = originalSrc;
             document.getElementById("prev-after").src = processedUri;
             globalProcessedUri = processedUri;
             globalFileName = fileName;
+            globalToolType = toolType;
+            document.getElementById("modal-title").innerText = titleText;
             document.getElementById("preview-modal").style.display = "flex";
         }
-        function closePreviewModal() { document.getElementById("preview-modal").style.display = "none"; }
-
-        function downloadFinalPDF() {
-            if(!globalProcessedUri) return;
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            let img = new Image();
-            img.src = globalProcessedUri;
-            img.onload = function() {
-                doc.addImage(globalProcessedUri, 'JPEG', 15, 20, 180, (180 * img.height) / img.width);
-                doc.save(globalFileName);
-                closePreviewModal();
-            };
+        
+        function closePreviewModal() { 
+            document.getElementById("preview-modal").style.display = "none"; 
         }
 
-        // Heavy Multi-Pass Matrix Processing Algorithm
-        function runHeavyMatrixProcess() {
-            let fileInput = document.getElementById("clean-file");
-            let status = document.getElementById("clean-status");
-            if(fileInput.files.length === 0) { status.innerText = "⚠️ Kripya pehle ek valid image file select karein!"; return; }
+        function downloadFinalOutput() {
+            if(!globalProcessedUri) return;
             
-            status.innerText = "⚙️ Allocating Tensor Matrix & Running Pass 1... ⏳";
+            if (globalToolType === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                let img = new Image();
+                img.src = globalProcessedUri;
+                img.onload = function() {
+                    let imgWidth = 190;
+                    let imgHeight = (imgWidth * img.height) / img.width;
+                    doc.addImage(globalProcessedUri, 'JPEG', 10, 15, imgWidth, imgHeight);
+                    doc.save(globalFileName);
+                    closePreviewModal();
+                };
+            } else {
+                const link = document.createElement('a');
+                link.download = globalFileName;
+                link.href = globalProcessedUri;
+                link.click();
+                closePreviewModal();
+            }
+        }
+
+        function processTool(toolType) {
+            let inputId = 'file-' + toolType;
+            let statusId = 'status-' + toolType;
+            
+            let fileInput = document.getElementById(inputId);
+            let statusBox = document.getElementById(statusId);
+
+            if(fileInput.files.length === 0) {
+                statusBox.innerText = "⚠️ Kripya pehle image select karein!";
+                return;
+            }
+
             let file = fileInput.files[0];
+            if(!file.type.startsWith('image/')) {
+                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                return;
+            }
+
+            statusBox.innerText = "⚡ Processing securely... ⏳";
             let reader = new FileReader();
+
+            reader.onerror = function() {
+                statusBox.innerText = "❌ Error: File read karne mein samasya aayi.";
+            };
 
             reader.onload = function(e) {
                 let originalSrc = e.target.result;
                 let img = new Image();
                 img.src = originalSrc;
+                
                 img.onload = function() {
-                    let canvas = document.createElement('canvas');
-                    canvas.width = img.width; canvas.height = img.height;
-                    let ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-
-                    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    let pixels = imgData.data;
-                    let width = canvas.width;
-                    let height = canvas.height;
-
-                    status.innerText = "⚡ Executing Pass 2: Spatial Noise Reduction & Watermark Inpainting... ⏳";
-
-                    // Clone data for matrix neighborhood sampling
-                    let originalBuffer = new Uint8ClampedArray(pixels);
-
-                    // Heavy Spatial Matrix Convolution Loop
-                    for (let y = 2; y < height - 2; y++) {
-                        for (let x = 2; x < width - 2; x++) {
-                            let idx = (y * width + x) * 4;
-                            let r = originalBuffer[idx], g = originalBuffer[idx+1], b = originalBuffer[idx+2];
-                            let brightness = (r + g + b) / 3;
-
-                            // Intelligent detection for semi-transparent stamps, text overlays, or grey shadows
-                            if (brightness > 105 && brightness < 235 && Math.abs(r - g) < 25 && Math.abs(g - b) < 25) {
-                                // Sample clean border pixels around the noise block
-                                let nIdx1 = ((y - 2) * width + (x - 2)) * 4;
-                                let nIdx2 = ((y + 2) * width + (x + 2)) * 4;
-                                
-                                pixels[idx] = (originalBuffer[nIdx1] + originalBuffer[nIdx2]) / 2;
-                                pixels[idx+1] = (originalBuffer[nIdx1+1] + originalBuffer[nIdx2+1]) / 2;
-                                pixels[idx+2] = (originalBuffer[nIdx1+2] + originalBuffer[nIdx2+2]) / 2;
-                            } else if (brightness <= 105) {
-                                // Sharpen text elements for high-definition contrast
-                                pixels[idx] = Math.max(0, r - 40);
-                                pixels[idx+1] = Math.max(0, g - 40);
-                                pixels[idx+2] = Math.max(0, b - 40);
-                            } else {
-                                // Force clean background to absolute white
-                                pixels[idx] = 255;
-                                pixels[idx+1] = 255;
-                                pixels[idx+2] = 255;
-                            }
+                    let maxDimension = 2000;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > maxDimension || height > maxDimension) {
+                        if (width > height) {
+                            height = Math.round((height * maxDimension) / width);
+                            width = maxDimension;
+                        } else {
+                            width = Math.round((width * maxDimension) / height);
+                            height = maxDimension;
                         }
                     }
 
-                    ctx.putImageData(imgData, 0, 0);
-                    let heavyProcessedUri = canvas.toDataURL('image/jpeg', 0.98);
-                    
-                    status.innerText = "✅ Heavy Matrix Processing Successfully Completed!";
-                    openPreviewModal(originalSrc, heavyProcessedUri, "Pawan_PDF_Editor_Heavy_Cleaned.pdf");
+                    let canvas = document.createElement('canvas');
+                    canvas.width = width; 
+                    canvas.height = height;
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    let processedUri = originalSrc;
+                    let titleText = "";
+                    let outName = "";
+
+                    try {
+                        if (toolType === 'watermark') {
+                            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            let pixels = imgData.data;
+                            for (let i = 0; i < pixels.length; i += 4) {
+                                let r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+                                if (r > 140 && g > 140 && b > 140 && Math.abs(r - g) < 25) {
+                                    let sampleIdx = (i > 300) ? i - 300 : i + 300;
+                                    pixels[i] = pixels[sampleIdx];
+                                    pixels[i+1] = pixels[sampleIdx+1];
+                                    pixels[i+2] = pixels[sampleIdx+2];
+                                }
+                            }
+                            ctx.putImageData(imgData, 0, 0);
+                            processedUri = canvas.toDataURL('image/jpeg', 0.92);
+                            titleText = "⚡ Advanced Watermark Cleaner";
+                            outName = "clean_document.jpg";
+                        } 
+                        else if (toolType === 'contrast') {
+                            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            let pixels = imgData.data;
+                            for (let i = 0; i < pixels.length; i += 4) {
+                                let r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+                                let brightness = (r + g + b) / 3;
+                                if (brightness > 110) {
+                                    pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
+                                } else {
+                                    pixels[i] = Math.max(0, r - 40);
+                                    pixels[i+1] = Math.max(0, g - 40);
+                                    pixels[i+2] = Math.max(0, b - 40);
+                                }
+                            }
+                            ctx.putImageData(imgData, 0, 0);
+                            processedUri = canvas.toDataURL('image/jpeg', 0.92);
+                            titleText = "⚡ Enhanced Readability Filter";
+                            outName = "enhanced_document.jpg";
+                        }
+                        else if (toolType === 'compress') {
+                            processedUri = canvas.toDataURL('image/jpeg', 0.55);
+                            titleText = "⚡ Optimized Image Compression";
+                            outName = "compressed_image.jpg";
+                        }
+                        else if (toolType === 'pdf') {
+                            processedUri = canvas.toDataURL('image/jpeg', 0.92);
+                            titleText = "⚡ Professional PDF Generator";
+                            outName = "converted_document.pdf";
+                        }
+                        
+                        statusBox.innerText = "✅ Ready for Review!";
+                        openPreviewModal(originalSrc, processedUri, outName, titleText, toolType);
+                    } catch (err) {
+                        statusBox.innerText = "❌ Processing Error: Canvas data load nahi ho saka.";
+                    }
                 };
             };
             reader.readAsDataURL(file);

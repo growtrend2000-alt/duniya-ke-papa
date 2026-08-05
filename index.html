@@ -121,9 +121,7 @@
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;" id="studio-desc-heading">Directly touch/click to edit document.</p>
             
             <div class="canvas-toolbar">
-                <div class="tool-group" id="toolbar-buttons-container">
-                    <!-- Dynamically populated buttons -->
-                </div>
+                <div class="tool-group" id="toolbar-buttons-container"></div>
                 <div class="tool-group" id="text-controls-group" style="display:none;">
                     <input type="text" id="canvas-text-input" placeholder="Type here..." value="Verified" style="margin:0; width: 140px; padding: 6px 10px; font-size:0.85rem;">
                 </div>
@@ -283,7 +281,8 @@
         function setMode(mode) {
             currentEditMode = mode;
             document.querySelectorAll('.tool-chip').forEach(el => el.classList.remove('active'));
-            document.getElementById('mode-' + mode).classList.add('active');
+            let targetChip = document.getElementById('mode-' + mode);
+            if(targetChip) targetChip.classList.add('active');
             let textGroup = document.getElementById('text-controls-group');
             if (mode === 'text') { textGroup.style.display = 'flex'; } else { textGroup.style.display = 'none'; }
         }
@@ -293,13 +292,13 @@
             let statusBox = document.getElementById('status-watermark');
 
             if(!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
                 return;
             }
 
             let file = fileInput.files[0];
             if(!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
                 return;
             }
 
@@ -318,11 +317,11 @@
                     ctxObj.drawImage(img, 0, 0);
 
                     document.getElementById('studio-title-heading').innerText = "✨ Manual Watermark Eraser Studio";
-                    document.getElementById('studio-desc-heading').innerText = "Watermark ya stamp ke upar touch/drag karke white background se mita dein.";
+                    document.getElementById('studio-desc-heading').innerText = "Watermark ya stamp ke upar touch karke white background se mita dein.";
                     
                     let toolbarContainer = document.getElementById('toolbar-buttons-container');
                     toolbarContainer.innerHTML = `
-                        <button class="tool-chip active" id="mode-wm-eraser" onclick="setMode('watermark-eraser')">🧹 Eraser Brush (Touch to Erase)</button>
+                        <button class="tool-chip active" id="mode-watermark-eraser" onclick="setMode('watermark-eraser')">🧹 Eraser Brush (Touch to Erase)</button>
                     `;
                     document.getElementById('text-controls-group').style.display = 'none';
                     currentEditMode = 'watermark-eraser';
@@ -339,13 +338,13 @@
             let statusBox = document.getElementById('status-editor');
 
             if(!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
                 return;
             }
 
             let file = fileInput.files[0];
             if(!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
                 return;
             }
 
@@ -417,7 +416,8 @@
                 }
             }
             else if (currentEditMode === 'text' && isClick) {
-                let txt = document.getElementById('canvas-text-input').value || "Verified";
+                let txtInput = document.getElementById('canvas-text-input');
+                let txt = txtInput ? txtInput.value : "Verified";
                 ctxObj.fillStyle = "#FFFFFF";
                 ctxObj.fillRect(pos.x - 4, pos.y - 24, (txt.length * 16), 32);
                 ctxObj.font = "bold 22px 'Inter', Arial, sans-serif";
@@ -481,13 +481,13 @@
             let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
 
             if(!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
                 return;
             }
 
             let file = fileInput.files[0];
             if(!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
                 return;
             }
 
@@ -540,13 +540,13 @@
             let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
 
             if(!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
                 return;
             }
 
             let file = fileInput.files[0];
             if(!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
                 return;
             }
 

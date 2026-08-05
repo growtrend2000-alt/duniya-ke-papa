@@ -3,51 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawan PDF Studio - Ultimate Document Suite</title>
+    <title>Pawan PDF Studio - Pro Document Suite</title>
     <!-- jsPDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #0F172A 0%, #1E1B4B 100%);
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover: rgba(255, 255, 255, 0.07);
-            --text-main: #F8FAFC;
+            --bg-dark: #0B0F17;
+            --charcoal: #121824;
+            --charcoal-light: #1E293B;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --card-border: rgba(239, 68, 68, 0.15);
+            --card-hover: rgba(30, 41, 59, 0.9);
+            --text-main: #FFFFFF;
             --text-muted: #94A3B8;
-            --accent: #3B82F6;
-            --accent-hover: #2563EB;
+            --primary-red: #EF4444;
+            --primary-red-hover: #DC2626;
             --success: #10B981;
             --success-hover: #059669;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
-        body { background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
         /* Welcome Popup */
         #welcome-popup {
             display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 999999;
+            background: rgba(11, 15, 23, 0.88); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 999999;
         }
-        .welcome-content { background: rgba(30, 41, 59, 0.9); padding: 40px; border-radius: 24px; max-width: 440px; width: 90%; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .welcome-img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--accent); margin-bottom: 20px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+        .welcome-content { background: var(--charcoal); padding: 40px; border-radius: 24px; max-width: 440px; width: 90%; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .welcome-img { width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 4px solid var(--primary-red); margin-bottom: 20px; box-shadow: 0 0 25px rgba(239, 68, 68, 0.4); }
         .welcome-content h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: #FFFFFF; letter-spacing: -0.5px; }
         .welcome-content p { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; font-weight: 500; }
+
+        /* Interactive Studio Workspace Modal */
+        #interactive-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(11, 15, 23, 0.92); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 99999; padding: 20px;
+        }
+        .interactive-content { background: var(--charcoal); padding: 25px; border-radius: 24px; max-width: 850px; width: 100%; max-height: 95vh; display: flex; flex-direction: column; border: 1px solid rgba(239, 68, 68, 0.25); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
+        .canvas-toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; align-items: center; justify-content: space-between; background: var(--charcoal-light); padding: 12px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+        .tool-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .tool-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .tool-chip.active { background: var(--primary-red); border-color: var(--primary-red); box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); }
+        .canvas-container { flex: 1; overflow: auto; background: #070a0f; border-radius: 12px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(255,255,255,0.05); padding: 10px; max-height: 50vh; }
+        #live-canvas { cursor: crosshair; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); touch-action: none; }
 
         /* Preview Modal */
         #preview-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 99999;
+            background: rgba(11, 15, 23, 0.88); backdrop-filter: blur(12px); justify-content: center; align-items: center; z-index: 99999;
         }
-        .preview-content { background: rgba(30, 41, 59, 0.95); padding: 35px; border-radius: 24px; max-width: 700px; width: 90%; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .preview-content { background: var(--charcoal); padding: 35px; border-radius: 24px; max-width: 700px; width: 90%; text-align: center; border: 1px solid rgba(239, 68, 68, 0.25); box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0; }
-        .comparison-box img { width: 100%; height: 200px; object-fit: contain; background: rgba(15, 23, 42, 0.5); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .comparison-box img { width: 100%; height: 200px; object-fit: contain; background: #070a0f; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .comparison-box h4 { margin-bottom: 8px; font-size: 0.95rem; color: var(--text-muted); }
 
         header {
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 20px 40px;
+            background: rgba(18, 24, 36, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(239, 68, 68, 0.15); padding: 18px 40px;
             display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
         .logo-area { display: flex; align-items: center; gap: 14px; }
-        .logo-area span { background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: white; padding: 10px 16px; font-weight: 900; border-radius: 12px; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .logo-area span { background: linear-gradient(135deg, #EF4444, #B91C1C); color: white; padding: 10px 16px; font-weight: 900; border-radius: 12px; font-size: 1.2rem; box-shadow: 0 4px 15px rgba(239,68,68,0.4); }
         .logo-area h1 { font-size: 1.5rem; font-weight: 800; color: #FFFFFF; letter-spacing: -0.5px; }
 
         .main-container { max-width: 1280px; margin: 40px auto; padding: 0 24px; flex: 1; width: 100%; }
@@ -59,32 +74,31 @@
         .tool-card {
             background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px;
             border: 1px solid var(--card-border); display: flex; flex-direction: column; justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .tool-card:hover { border-color: rgba(59, 130, 246, 0.4); background: var(--card-hover); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .tool-card:hover { border-color: rgba(239, 68, 68, 0.5); background: var(--card-hover); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(239, 68, 68, 0.12); }
         .tool-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: #FFFFFF; display: flex; align-items: center; gap: 8px; }
         .tool-card p { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px; line-height: 1.5; }
 
         .action-btn {
-            background: var(--accent); color: white; border: none; padding: 14px; border-radius: 12px;
+            background: var(--primary-red); color: white; border: none; padding: 14px; border-radius: 12px;
             font-weight: 700; font-size: 0.95rem; cursor: pointer; width: 100%; margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35); transition: all 0.2s ease;
         }
-        .action-btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
-        .action-btn.success { background: var(--success); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
-        .action-btn.success:hover { background: var(--success-hover); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
-        .action-btn.secondary { background: rgba(255,255,255,0.08); color: #FFFFFF; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); }
-        .action-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+        .action-btn:hover { background: var(--primary-red-hover); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5); }
+        .action-btn.success { background: var(--success); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); }
+        .action-btn.success:hover { background: var(--success-hover); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
+        .action-btn.secondary { background: rgba(255,255,255,0.06); color: #FFFFFF; box-shadow: none; border: 1px solid rgba(255,255,255,0.1); }
+        .action-btn.secondary:hover { background: rgba(255,255,255,0.12); }
 
         input[type="file"], select, input[type="text"], input[type="number"] {
-            width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: rgba(15, 23, 42, 0.6); color: #FFFFFF; outline: none; font-size: 0.9rem; margin-bottom: 12px; transition: border-color 0.2s;
+            width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: #0B0F17; color: #FFFFFF; outline: none; font-size: 0.9rem; margin-bottom: 12px; transition: border-color 0.2s;
         }
-        input[type="file"]:hover, select:hover, input[type="text"]:hover, input[type="number"]:hover { border-color: rgba(59, 130, 246, 0.5); }
+        input[type="file"]:hover, select:hover, input[type="text"]:hover, input[type="number"]:hover { border-color: rgba(239, 68, 68, 0.5); }
         input[type="file"] { border-style: dashed; cursor: pointer; color: var(--text-muted); }
-        select option { background: #1E293B; color: #FFFFFF; }
-        .row-inputs { display: flex; gap: 10px; }
+        select option { background: var(--charcoal); color: #FFFFFF; }
         .status-box {
-            background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; word-break: break-all;
+            background: rgba(11, 15, 23, 0.6); border: 1px solid rgba(255,255,255,0.05); padding: 10px 14px; border-radius: 10px; font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; word-break: break-all;
         }
     </style>
 </head>
@@ -93,10 +107,36 @@
     <!-- Welcome Popup -->
     <div id="welcome-popup">
         <div class="welcome-content">
-            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAArAC4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AQHDAxEEASM3BhFhRFdh8TFAgZHB0CIxFUIlUvRVsRNCHSVWYzVysnNv8FD0gZLShJGF0pXRYEPS4CJDNkJVhnSKGJkyU2V1kpSpry1k1mJatariptkZXSl5KTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACivK9W/aR+GOg6tfaVqXif7PqFjcSWt1D9gu38uWNzG65WIrwysMgkcda8/+I3/AAUV+HHhDUIrTRre88VGS3SVriwE0UasxYGP95Ect8oPRh83XrQB9S0V8qfDz/AIKffCzxh4osNK1nTdW8JW9y7iTU9SNv9mgCqzBn2StJjIxhUJO4V9WwzR3EMc0UiyRSKGR0OQwPIIPoaAHUUUUAFFFF/wD//2Q==" alt="Creator Photo" class="welcome-img">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAArAC4DASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AQHDAxEEASM3BhFhRFdh8TFAgZHB0CIxFUIlUvRVsRNCHSVWYzVysnNv8FD0gZLShJGF0pXRYEPS4CJDNkJVhnSKGJkyU2V1kpSpry1k1mJatariptkZXSl5KTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooarnasdasdfadfasdfasdfasdfasdfasdasdfasdfasdf" alt="Creator Photo" class="welcome-img">
             <h2>Pawan PDF Studio</h2>
             <p>made by pawan</p>
             <button class="action-btn success" onclick="closeWelcomePopup()">Thanks</button>
+        </div>
+    </div>
+
+    <!-- Interactive Workspace Modal -->
+    <div id="interactive-modal">
+        <div class="interactive-content">
+            <h3 style="color: #FFFFFF; margin-bottom: 4px;" id="studio-title-heading">⚡ Studio Workspace</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;" id="studio-desc-heading">Directly touch/click to edit document.</p>
+            
+            <div class="canvas-toolbar">
+                <div class="tool-group" id="toolbar-buttons-container">
+                    <!-- Dynamically populated buttons -->
+                </div>
+                <div class="tool-group" id="text-controls-group" style="display:none;">
+                    <input type="text" id="canvas-text-input" placeholder="Type here..." value="Verified" style="margin:0; width: 140px; padding: 6px 10px; font-size:0.85rem;">
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="live-canvas"></canvas>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="action-btn success" style="margin-top:0;" onclick="saveCanvasChanges()">💾 Save Changes & Preview</button>
+                <button class="action-btn secondary" style="margin-top:0;" onclick="closeInteractiveModal()">Cancel</button>
+            </div>
         </div>
     </div>
 
@@ -132,7 +172,7 @@
     <div class="main-container">
         <div class="hero-title">
             <h2>Next-Gen Document Suite</h2>
-            <p>Professional tools for watermark cleaning, manual text editing, layout resizing, and instant conversion.</p>
+            <p>Professional tools for manual watermark erasing, interactive touch text editing, layout resizing, and instant conversion.</p>
         </div>
 
         <div class="tools-grid">
@@ -140,29 +180,27 @@
             <div class="tool-card">
                 <div>
                     <h3>✨ Super Watermark Remover</h3>
-                    <p>Advanced deep-clean filter to eliminate stubborn background watermarks and overlays.</p>
+                    <p>Auto clean or <b>Manual Touch Erase</b>: Document ke kisi bhi hisse par touch karke watermark/stamp hatayein.</p>
                     <input type="file" id="file-watermark" accept="image/*">
                 </div>
                 <div>
-                    <button class="action-btn" onclick="processTool('watermark')">Clean Watermark</button>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="action-btn" style="flex:1;" onclick="processToolAuto('watermark')">Auto Clean</button>
+                        <button class="action-btn success" style="flex:1;" onclick="openWatermarkStudio()">Manual Erase</button>
+                    </div>
                     <div class="status-box" id="status-watermark">Status: Ready</div>
                 </div>
             </div>
 
-            <!-- 2. Precision Text Editor -->
+            <!-- 2. Interactive Direct Text Editor -->
             <div class="tool-card">
                 <div>
-                    <h3>✍️ Precision Text Editor</h3>
-                    <p>Hide old text with smart background masking and write custom text in matching style.</p>
+                    <h3>✍️ Interactive Line & Text Editor</h3>
+                    <p>File upload karein aur direct document ke andar touch karke text likhein, mitayein ya highlight karein.</p>
                     <input type="file" id="file-editor" accept="image/*">
-                    <input type="text" id="custom-text-input" placeholder="New text to write" value="Verified Copy">
-                    <div class="row-inputs">
-                        <input type="number" id="text-x" placeholder="X Pos (px)" value="100">
-                        <input type="number" id="text-y" placeholder="Y Pos (px)" value="100">
-                    </div>
                 </div>
                 <div>
-                    <button class="action-btn" onclick="processTool('editor')">Replace / Add Text</button>
+                    <button class="action-btn" onclick="openInteractiveStudio()">Open Live Editor Studio</button>
                     <div class="status-box" id="status-editor">Status: Ready</div>
                 </div>
             </div>
@@ -234,24 +272,183 @@
         let globalProcessedUri = null;
         let globalToolType = "";
         let globalFileName = "document.pdf";
+        let activeEditorImageSrc = "";
+        let currentEditMode = "text";
+        let canvasObj, ctxObj;
+        let isDrawing = false;
 
-        function openPreviewModal(originalSrc, processedUri, fileName, titleText, toolType) {
-            document.getElementById("prev-before").src = originalSrc;
-            document.getElementById("prev-after").src = processedUri;
-            globalProcessedUri = processedUri;
-            globalFileName = fileName;
-            globalToolType = toolType;
-            document.getElementById("modal-title").innerText = titleText;
-            document.getElementById("preview-modal").style.display = "flex";
+        function closePreviewModal() { document.getElementById("preview-modal").style.display = "none"; }
+        function closeInteractiveModal() { document.getElementById("interactive-modal").style.display = "none"; }
+
+        function setMode(mode) {
+            currentEditMode = mode;
+            document.querySelectorAll('.tool-chip').forEach(el => el.classList.remove('active'));
+            document.getElementById('mode-' + mode).classList.add('active');
+            let textGroup = document.getElementById('text-controls-group');
+            if (mode === 'text') { textGroup.style.display = 'flex'; } else { textGroup.style.display = 'none'; }
         }
-        
-        function closePreviewModal() { 
-            document.getElementById("preview-modal").style.display = "none"; 
+
+        function openWatermarkStudio() {
+            let fileInput = document.getElementById('file-watermark');
+            let statusBox = document.getElementById('status-watermark');
+
+            if(!fileInput || fileInput.files.length === 0) {
+                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                return;
+            }
+
+            let file = fileInput.files[0];
+            if(!file.type.startsWith('image/')) {
+                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                activeEditorImageSrc = e.target.result;
+                let img = new Image();
+                img.src = activeEditorImageSrc;
+                img.onload = function() {
+                    canvasObj = document.getElementById('live-canvas');
+                    canvasObj.width = img.width;
+                    canvasObj.height = img.height;
+                    ctxObj = canvasObj.getContext('2d');
+                    ctxObj.drawImage(img, 0, 0);
+
+                    document.getElementById('studio-title-heading').innerText = "✨ Manual Watermark Eraser Studio";
+                    document.getElementById('studio-desc-heading').innerText = "Watermark ya stamp ke upar touch/drag karke white background se mita dein.";
+                    
+                    let toolbarContainer = document.getElementById('toolbar-buttons-container');
+                    toolbarContainer.innerHTML = `
+                        <button class="tool-chip active" id="mode-wm-eraser" onclick="setMode('watermark-eraser')">🧹 Eraser Brush (Touch to Erase)</button>
+                    `;
+                    document.getElementById('text-controls-group').style.display = 'none';
+                    currentEditMode = 'watermark-eraser';
+
+                    document.getElementById('interactive-modal').style.display = 'flex';
+                    statusBox.innerText = "Status: Ready";
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openInteractiveStudio() {
+            let fileInput = document.getElementById('file-editor');
+            let statusBox = document.getElementById('status-editor');
+
+            if(!fileInput || fileInput.files.length === 0) {
+                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                return;
+            }
+
+            let file = fileInput.files[0];
+            if(!file.type.startsWith('image/')) {
+                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                activeEditorImageSrc = e.target.result;
+                let img = new Image();
+                img.src = activeEditorImageSrc;
+                img.onload = function() {
+                    canvasObj = document.getElementById('live-canvas');
+                    canvasObj.width = img.width;
+                    canvasObj.height = img.height;
+                    ctxObj = canvasObj.getContext('2d');
+                    ctxObj.drawImage(img, 0, 0);
+
+                    document.getElementById('studio-title-heading').innerText = "⚡ Interactive Document Canvas Studio";
+                    document.getElementById('studio-desc-heading').innerText = "Directly click/touch lines to write text, erase/whiteout errors, or highlight important text.";
+                    
+                    let toolbarContainer = document.getElementById('toolbar-buttons-container');
+                    toolbarContainer.innerHTML = `
+                        <button class="tool-chip active" id="mode-text" onclick="setMode('text')">✍️ Type Text</button>
+                        <button class="tool-chip" id="mode-eraser" onclick="setMode('eraser')">🧹 Whiteout Eraser</button>
+                        <button class="tool-chip" id="mode-highlighter" onclick="setMode('highlighter')">🖍️ Highlighter</button>
+                    `;
+                    setMode('text');
+
+                    document.getElementById('interactive-modal').style.display = 'flex';
+                    statusBox.innerText = "Status: Ready";
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const canvas = document.getElementById('live-canvas');
+            if(canvas) {
+                canvas.addEventListener('mousedown', (e) => { isDrawing = true; handleCanvasAction(e, true); });
+                canvas.addEventListener('mousemove', (e) => { if(isDrawing) handleCanvasAction(e, false); });
+                window.addEventListener('mouseup', () => { isDrawing = false; });
+
+                canvas.addEventListener('touchstart', (e) => { isDrawing = true; handleCanvasAction(e, true); e.preventDefault(); }, {passive: false});
+                canvas.addEventListener('touchmove', (e) => { if(isDrawing) handleCanvasAction(e, false); e.preventDefault(); }, {passive: false});
+                window.addEventListener('touchend', () => { isDrawing = false; });
+            }
+        });
+
+        function handleCanvasAction(e, isClick) {
+            if (!ctxObj || !canvasObj) return;
+            const pos = getEventPos(e, canvasObj);
+
+            if (currentEditMode === 'watermark-eraser') {
+                ctxObj.fillStyle = "#FFFFFF";
+                ctxObj.beginPath();
+                ctxObj.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+                ctxObj.fill();
+            } 
+            else if (currentEditMode === 'eraser') {
+                if(isClick) {
+                    ctxObj.fillStyle = "#FFFFFF";
+                    ctxObj.fillRect(pos.x - 25, pos.y - 15, 70, 30);
+                }
+            } 
+            else if (currentEditMode === 'highlighter') {
+                if(isClick) {
+                    ctxObj.fillStyle = "rgba(250, 204, 21, 0.45)";
+                    ctxObj.fillRect(pos.x - 5, pos.y - 18, 120, 26);
+                }
+            }
+            else if (currentEditMode === 'text' && isClick) {
+                let txt = document.getElementById('canvas-text-input').value || "Verified";
+                ctxObj.fillStyle = "#FFFFFF";
+                ctxObj.fillRect(pos.x - 4, pos.y - 24, (txt.length * 16), 32);
+                ctxObj.font = "bold 22px 'Inter', Arial, sans-serif";
+                ctxObj.fillStyle = "#1E293B";
+                ctxObj.fillText(txt, pos.x, pos.y);
+            }
+        }
+
+        function getEventPos(e, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let clientX = e.clientX, clientY = e.clientY;
+            if(e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+        }
+
+        function saveCanvasChanges() {
+            if(!canvasObj) return;
+            globalProcessedUri = canvasObj.toDataURL('image/jpeg', 0.95);
+            globalFileName = "cleaned_document.jpg";
+            globalToolType = "editor";
+            closeInteractiveModal();
+            
+            document.getElementById("prev-before").src = activeEditorImageSrc;
+            document.getElementById("prev-after").src = globalProcessedUri;
+            document.getElementById("modal-title").innerText = "⚡ Manual Studio Result";
+            document.getElementById("preview-modal").style.display = "flex";
         }
 
         function downloadFinalOutput() {
             if(!globalProcessedUri) return;
-            
             if (globalToolType === 'pdf') {
                 try {
                     const { jsPDF } = window.jspdf;
@@ -265,9 +462,7 @@
                         doc.save(globalFileName);
                         closePreviewModal();
                     };
-                } catch(e) {
-                    alert("PDF download error: " + e.message);
-                }
+                } catch(e) { alert("PDF download error: " + e.message); }
             } else {
                 const link = document.createElement('a');
                 link.download = globalFileName;
@@ -277,12 +472,9 @@
             }
         }
 
-        function processTool(toolType) {
-            let inputId = 'file-' + toolType;
-            let statusId = 'status-' + toolType;
-            
-            let fileInput = document.getElementById(inputId);
-            let statusBox = document.getElementById(statusId);
+        function processToolAuto(toolType) {
+            let inputId = 'file-' + toolType, statusId = 'status-' + toolType;
+            let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
 
             if(!fileInput || fileInput.files.length === 0) {
                 statusBox.innerText = "⚠️ Kripya pehle file select karein!";
@@ -298,9 +490,62 @@
             statusBox.innerText = "⚡ Processing securely... ⏳";
             let reader = new FileReader();
 
-            reader.onerror = function() {
-                statusBox.innerText = "❌ Error: File read karne mein samasya aayi.";
+            reader.onload = function(e) {
+                let originalSrc = e.target.result;
+                let img = new Image();
+                img.src = originalSrc;
+                
+                img.onload = function() {
+                    let width = img.width, height = img.height;
+                    let canvas = document.createElement('canvas');
+                    canvas.width = width; canvas.height = height;
+                    let ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    try {
+                        let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        let pixels = imgData.data;
+                        for (let i = 0; i < pixels.length; i += 4) {
+                            let r = pixels[i], g = pixels[i+1], b = pixels[i+2];
+                            if (r > 130 && g > 130 && b > 130 && Math.abs(r - g) < 30) {
+                                pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
+                            }
+                        }
+                        ctx.putImageData(imgData, 0, 0);
+                        let processedUri = canvas.toDataURL('image/jpeg', 0.95);
+                        
+                        statusBox.innerText = "✅ Ready for Review!";
+                        globalProcessedUri = processedUri;
+                        globalFileName = "auto_clean_document.jpg";
+                        globalToolType = toolType;
+                        
+                        document.getElementById("prev-before").src = originalSrc;
+                        document.getElementById("prev-after").src = processedUri;
+                        document.getElementById("modal-title").innerText = "⚡ Auto Watermark Cleaner Result";
+                        document.getElementById("preview-modal").style.display = "flex";
+                    } catch (err) { statusBox.innerText = "❌ Processing Error."; }
+                };
             };
+            reader.readAsDataURL(file);
+        }
+
+        function processTool(toolType) {
+            let inputId = 'file-' + toolType, statusId = 'status-' + toolType;
+            let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
+
+            if(!fileInput || fileInput.files.length === 0) {
+                statusBox.innerText = "⚠️ Kripya pehle file select karein!";
+                return;
+            }
+
+            let file = fileInput.files[0];
+            if(!file.type.startsWith('image/')) {
+                statusBox.innerText = "⚠️ Error: Kripya valid image file select karein!";
+                return;
+            }
+
+            statusBox.innerText = "⚡ Processing securely... ⏳";
+            let reader = new FileReader();
 
             reader.onload = function(e) {
                 let originalSrc = e.target.result;
@@ -308,84 +553,36 @@
                 img.src = originalSrc;
                 
                 img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
+                    let width = img.width, height = img.height;
                     let canvas = document.createElement('canvas');
                     
                     if (toolType === 'resizer') {
                         let mode = document.getElementById('resize-mode').value;
-                        if (mode === 'a4') {
-                            canvas.width = 1240; canvas.height = 1754;
-                        } else {
-                            let dim = Math.max(width, height);
-                            canvas.width = dim; canvas.height = dim;
-                        }
+                        if (mode === 'a4') { canvas.width = 1240; canvas.height = 1754; }
+                        else { let dim = Math.max(width, height); canvas.width = dim; canvas.height = dim; }
                     } else {
                         let maxDimension = 2000;
                         if (width > maxDimension || height > maxDimension) {
-                            if (width > height) {
-                                height = Math.round((height * maxDimension) / width);
-                                width = maxDimension;
-                            } else {
-                                width = Math.round((width * maxDimension) / height);
-                                height = maxDimension;
-                            }
+                            if (width > height) { height = Math.round((height * maxDimension) / width); width = maxDimension; }
+                            else { width = Math.round((width * maxDimension) / height); height = maxDimension; }
                         }
-                        canvas.width = width; 
-                        canvas.height = height;
+                        canvas.width = width; canvas.height = height;
                     }
 
                     let ctx = canvas.getContext('2d');
                     ctx.fillStyle = "#FFFFFF";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
-                    let dx = (canvas.width - width) / 2;
-                    let dy = (canvas.height - height) / 2;
+                    let dx = (canvas.width - width) / 2, dy = (canvas.height - height) / 2;
                     if(toolType !== 'resizer') { dx = 0; dy = 0; width = canvas.width; height = canvas.height; }
-                    
                     ctx.drawImage(img, dx, dy, width, height);
 
-                    let processedUri = originalSrc;
-                    let titleText = "";
-                    let outName = "";
+                    let processedUri = originalSrc, titleText = "", outName = "";
 
                     try {
-                        if (toolType === 'watermark') {
-                            let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                            let pixels = imgData.data;
-                            for (let i = 0; i < pixels.length; i += 4) {
-                                let r = pixels[i], g = pixels[i+1], b = pixels[i+2];
-                                if (r > 130 && g > 130 && b > 130 && Math.abs(r - g) < 30) {
-                                    pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
-                                }
-                            }
-                            ctx.putImageData(imgData, 0, 0);
+                        if (toolType === 'resizer') {
                             processedUri = canvas.toDataURL('image/jpeg', 0.95);
-                            titleText = "⚡ Advanced Watermark Cleaner";
-                            outName = "clean_document.jpg";
-                        } 
-                        else if (toolType === 'editor') {
-                            let customText = document.getElementById('custom-text-input').value || "Verified";
-                            let posX = parseInt(document.getElementById('text-x').value) || 100;
-                            let posY = parseInt(document.getElementById('text-y').value) || 100;
-
-                            // White patch mask to hide old text
-                            ctx.fillStyle = "#FFFFFF";
-                            ctx.fillRect(posX - 5, posY - 25, (customText.length * 18), 35);
-
-                            // Custom Text overlay
-                            ctx.font = "bold 24px 'Inter', Arial, sans-serif";
-                            ctx.fillStyle = "#1E293B"; 
-                            ctx.fillText(customText, posX, posY);
-
-                            processedUri = canvas.toDataURL('image/jpeg', 0.95);
-                            titleText = "⚡ Precision Text Editor";
-                            outName = "edited_document.jpg";
-                        }
-                        else if (toolType === 'resizer') {
-                            processedUri = canvas.toDataURL('image/jpeg', 0.95);
-                            titleText = "⚡ Smart Layout Resizer";
-                            outName = "resized_document.jpg";
+                            titleText = "⚡ Smart Layout Resizer"; outName = "resized_document.jpg";
                         }
                         else if (toolType === 'contrast') {
                             let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -393,35 +590,32 @@
                             for (let i = 0; i < pixels.length; i += 4) {
                                 let r = pixels[i], g = pixels[i+1], b = pixels[i+2];
                                 let brightness = (r + g + b) / 3;
-                                if (brightness > 105) {
-                                    pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255;
-                                } else {
-                                    pixels[i] = Math.max(0, r - 50);
-                                    pixels[i+1] = Math.max(0, g - 50);
-                                    pixels[i+2] = Math.max(0, b - 50);
-                                }
+                                if (brightness > 105) { pixels[i] = 255; pixels[i+1] = 255; pixels[i+2] = 255; }
+                                else { pixels[i] = Math.max(0, r - 50); pixels[i+1] = Math.max(0, g - 50); pixels[i+2] = Math.max(0, b - 50); }
                             }
                             ctx.putImageData(imgData, 0, 0);
                             processedUri = canvas.toDataURL('image/jpeg', 0.95);
-                            titleText = "⚡ High Contrast Enhancer";
-                            outName = "enhanced_document.jpg";
+                            titleText = "⚡ High Contrast Enhancer"; outName = "enhanced_document.jpg";
                         }
                         else if (toolType === 'compress') {
                             processedUri = canvas.toDataURL('image/jpeg', 0.50);
-                            titleText = "⚡ Optimized Image Compression";
-                            outName = "compressed_image.jpg";
+                            titleText = "⚡ Optimized Image Compression"; outName = "compressed_image.jpg";
                         }
                         else if (toolType === 'pdf') {
                             processedUri = canvas.toDataURL('image/jpeg', 0.95);
-                            titleText = "⚡ Professional PDF Generator";
-                            outName = "converted_document.pdf";
+                            titleText = "⚡ Professional PDF Generator"; outName = "converted_document.pdf";
                         }
                         
                         statusBox.innerText = "✅ Ready for Review!";
-                        openPreviewModal(originalSrc, processedUri, outName, titleText, toolType);
-                    } catch (err) {
-                        statusBox.innerText = "❌ Processing Error: Canvas data load nahi ho saka.";
-                    }
+                        globalProcessedUri = processedUri;
+                        globalFileName = outName;
+                        globalToolType = toolType;
+                        
+                        document.getElementById("prev-before").src = originalSrc;
+                        document.getElementById("prev-after").src = processedUri;
+                        document.getElementById("modal-title").innerText = titleText;
+                        document.getElementById("preview-modal").style.display = "flex";
+                    } catch (err) { statusBox.innerText = "❌ Processing Error."; }
                 };
             };
             reader.readAsDataURL(file);

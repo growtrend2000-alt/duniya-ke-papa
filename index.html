@@ -6,7 +6,6 @@
     <title>Pawan Document Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- jsPDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -30,9 +29,7 @@
             --radius-md: 14px;
             --radius-sm: 10px;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Inter', 'Segoe UI', sans-serif;
             background: var(--bg);
@@ -45,9 +42,7 @@
             display: flex;
             flex-direction: column;
         }
-
         ::selection { background: var(--accent-soft); color: var(--text-main); }
-
         #welcome-toast {
             position: fixed; bottom: 24px; right: 24px; z-index: 999999;
             background: var(--surface); border: 1px solid var(--border-strong);
@@ -65,15 +60,8 @@
         }
         .toast-body h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
         .toast-body p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px; }
-        .toast-close {
-            background: none; border: none; color: var(--accent); font-size: 0.78rem;
-            font-weight: 600; cursor: pointer; padding: 0;
-        }
-        .toast-x {
-            position: absolute; top: 10px; right: 12px; background: none; border: none;
-            color: var(--text-dim); cursor: pointer; font-size: 1rem; line-height: 1;
-        }
-
+        .toast-close { background: none; border: none; color: var(--accent); font-size: 0.78rem; font-weight: 600; cursor: pointer; padding: 0; }
+        .toast-x { position: absolute; top: 10px; right: 12px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; line-height: 1; }
         #interactive-modal {
             display: none; position: fixed; inset: 0;
             background: rgba(6, 8, 12, 0.82); backdrop-filter: blur(10px);
@@ -92,8 +80,7 @@
         .tool-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
         .tool-chip {
             background: rgba(255,255,255,0.04); border: 1px solid var(--border-strong); color: var(--text-main);
-            padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
+            padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
         .tool-chip:hover { border-color: var(--accent); }
         .tool-chip.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 14px rgba(45,212,191,0.45); }
@@ -103,7 +90,6 @@
             padding: 10px; max-height: 50vh;
         }
         #live-canvas { cursor: crosshair; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); touch-action: none; background: #FFFFFF; }
-
         #preview-modal {
             display: none; position: fixed; inset: 0;
             background: rgba(6, 8, 12, 0.82); backdrop-filter: blur(10px);
@@ -116,7 +102,7 @@
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
         .comparison-box img { width: 100%; height: 200px; object-fit: contain; background: #FFFFFF; border-radius: var(--radius-sm); border: 1px solid var(--border); }
         .comparison-box h4 { margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-
+        .comparison-box .size-tag { display:block; margin-top:8px; font-size:0.8rem; color: var(--text-main); font-weight:600; }
         header {
             background: rgba(10, 13, 18, 0.85); backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border); padding: 16px 40px;
@@ -129,14 +115,11 @@
             background: linear-gradient(150deg, var(--accent), #5EEAD4);
             box-shadow: 0 6px 18px rgba(45,212,191,0.35);
         }
-        .logo-mark::before, .logo-mark::after {
-            content: ''; position: absolute; background: rgba(255,255,255,0.9); border-radius: 3px;
-        }
+        .logo-mark::before, .logo-mark::after { content: ''; position: absolute; background: rgba(255,255,255,0.9); border-radius: 3px; }
         .logo-mark::before { width: 14px; height: 18px; top: 10px; left: 9px; box-shadow: 4px -3px 0 -1px rgba(255,255,255,0.55); }
         .logo-mark::after { width: 14px; height: 2px; top: 20px; left: 12px; background: var(--accent); box-shadow: 0 4px 0 var(--accent); }
         .logo-area h1 { font-family: 'Sora', sans-serif; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.3px; }
         .logo-area .tagline { font-size: 0.72rem; color: var(--text-dim); font-weight: 500; letter-spacing: 0.03em; }
-
         .main-container { max-width: 1240px; margin: 0 auto; padding: 56px 24px 80px; flex: 1; width: 100%; }
         .hero-title { text-align: center; margin-bottom: 56px; }
         .hero-eyebrow {
@@ -144,12 +127,8 @@
             color: var(--accent); background: var(--accent-soft); padding: 6px 14px; border-radius: 100px;
             margin-bottom: 18px; letter-spacing: 0.02em;
         }
-        .hero-title h2 {
-            font-family: 'Sora', sans-serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700;
-            margin-bottom: 14px; letter-spacing: -0.02em; color: var(--text-main);
-        }
+        .hero-title h2 { font-family: 'Sora', sans-serif; font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; margin-bottom: 14px; letter-spacing: -0.02em; color: var(--text-main); }
         .hero-title p { color: var(--text-muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto; line-height: 1.6; }
-
         .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
         .tool-card {
             background: var(--surface); border-radius: var(--radius-lg); padding: 28px;
@@ -159,21 +138,10 @@
             position: relative; overflow: hidden;
         }
         @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
-        .tool-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: var(--card-accent, var(--accent));
-            opacity: 0; transition: opacity 0.25s ease;
-        }
+        .tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-accent, var(--accent)); opacity: 0; transition: opacity 0.25s ease; }
         .tool-card:hover::before { opacity: 1; }
-        .tool-card:hover {
-            border-color: var(--card-accent, var(--accent)); background: var(--surface-hover);
-            transform: translateY(-6px); box-shadow: 0 22px 44px var(--card-accent-soft, rgba(45,212,191,0.14));
-        }
-
-        .tool-tag {
-            display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
-            text-transform: uppercase; color: var(--card-accent, var(--accent)); margin-bottom: 12px;
-        }
+        .tool-card:hover { border-color: var(--card-accent, var(--accent)); background: var(--surface-hover); transform: translateY(-6px); box-shadow: 0 22px 44px var(--card-accent-soft, rgba(45,212,191,0.14)); }
+        .tool-tag { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--card-accent, var(--accent)); margin-bottom: 12px; }
         .tool-icon {
             width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
             font-size: 1.4rem; margin-bottom: 14px; background: var(--card-accent-soft, var(--surface-2));
@@ -182,12 +150,10 @@
         .tool-card:hover .tool-icon { transform: scale(1.08) rotate(-4deg); }
         .tool-card h3 { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
         .tool-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.55; }
-
         .action-btn {
             background: var(--card-accent, var(--accent)); color: #0A0D11; border: none; padding: 13px; border-radius: var(--radius-sm);
             font-weight: 700; font-size: 0.92rem; cursor: pointer; width: 100%; margin-top: 10px;
-            box-shadow: 0 4px 14px var(--card-accent-soft, rgba(45,212,191,0.3)); transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 14px var(--card-accent-soft, rgba(45,212,191,0.3)); transition: all 0.2s ease; font-family: 'Inter', sans-serif;
         }
         .action-btn:hover { filter: brightness(0.92); transform: translateY(-1px); box-shadow: 0 6px 20px var(--card-accent-soft, rgba(45,212,191,0.42)); }
         .action-btn:active { transform: translateY(0); filter: brightness(0.85); }
@@ -195,10 +161,7 @@
         .action-btn.success:hover { background: var(--success-hover); box-shadow: 0 6px 20px rgba(34,197,94,0.42); }
         .action-btn.secondary { background: rgba(255,255,255,0.05); color: var(--text-main); box-shadow: none; border: 1px solid var(--border-strong); }
         .action-btn.secondary:hover { background: rgba(255,255,255,0.09); }
-        .action-btn:focus-visible, .tool-chip:focus-visible, input:focus-visible, select:focus-visible {
-            outline: 2px solid var(--accent); outline-offset: 2px;
-        }
-
+        .action-btn:focus-visible, .tool-chip:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
         input[type="file"], select, input[type="text"], input[type="number"] {
             width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
             background: var(--bg); color: var(--text-main); outline: none; font-size: 0.88rem; margin-bottom: 12px;
@@ -207,7 +170,6 @@
         input[type="file"]:hover, select:hover, input[type="text"]:hover, input[type="number"]:hover { border-color: rgba(45,212,191,0.5); }
         input[type="file"] { border-style: dashed; cursor: pointer; color: var(--text-muted); }
         select option { background: var(--surface); color: var(--text-main); }
-
         .upload-zone {
             position: relative; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm);
             padding: 20px 14px; text-align: center; cursor: pointer; margin-bottom: 12px;
@@ -219,34 +181,21 @@
         .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         .upload-icon {
             width: 34px; height: 34px; margin: 0 auto 8px; border-radius: 9px; display: flex; align-items: center;
-            justify-content: center; background: var(--surface-2); border: 1px solid var(--border); font-size: 1rem;
-            transition: all 0.2s ease;
+            justify-content: center; background: var(--surface-2); border: 1px solid var(--border); font-size: 1rem; transition: all 0.2s ease;
         }
         .upload-zone.has-file .upload-icon { background: var(--success-soft); border-color: rgba(34,197,94,0.35); }
         .upload-title { font-size: 0.85rem; font-weight: 600; color: var(--text-main); margin-bottom: 2px; }
         .upload-title span { color: var(--card-accent, var(--accent)); }
         .upload-hint { font-size: 0.74rem; color: var(--text-dim); }
         .upload-zone.has-file .upload-hint { color: var(--success); font-weight: 600; word-break: break-all; }
-
-        .status-box {
-            background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm);
-            font-size: 0.78rem; color: var(--text-muted); margin-top: 12px; word-break: break-all;
-        }
-
-        footer {
-            text-align: center; padding: 28px 24px; color: var(--text-dim); font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-        }
-
+        .status-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.78rem; color: var(--text-muted); margin-top: 12px; word-break: break-all; }
+        footer { text-align: center; padding: 28px 24px; color: var(--text-dim); font-size: 0.8rem; border-top: 1px solid var(--border); }
         @media (max-width: 640px) {
             header { padding: 14px 20px; }
             .main-container { padding: 40px 16px 60px; }
             #welcome-toast { left: 16px; right: 16px; max-width: none; }
         }
-
-        @media (prefers-reduced-motion: reduce) {
-            .tool-card, #welcome-toast { animation: none; opacity: 1; transform: none; }
-        }
+        @media (prefers-reduced-motion: reduce) { .tool-card, #welcome-toast { animation: none; opacity: 1; transform: none; } }
     </style>
 </head>
 <body>
@@ -265,18 +214,15 @@
         <div class="interactive-content">
             <h3 style="font-family:'Sora',sans-serif; margin-bottom: 4px;" id="studio-title-heading">Studio Workspace</h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;" id="studio-desc-heading">Directly touch/click to edit document.</p>
-
             <div class="canvas-toolbar">
                 <div class="tool-group" id="toolbar-buttons-container"></div>
-                <div class="tool-group" id="text-controls-group" style="display:none;">
-                    <input type="text" id="canvas-text-input" placeholder="Type here..." value="Verified" style="margin:0; width: 140px; padding: 6px 10px; font-size:0.85rem;">
+                <div class="tool-group" id="text-controls-group" style="display:none; width:100%;">
+                    <input type="text" id="canvas-text-input" placeholder="Yahan apna text likho..." value="" style="margin:0; width: 100%; min-width: 180px; padding: 10px 12px; font-size:0.95rem;">
                 </div>
             </div>
-
             <div class="canvas-container">
                 <canvas id="live-canvas"></canvas>
             </div>
-
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button class="action-btn success" style="margin-top:0;" onclick="saveCanvasChanges()">Save & Preview</button>
                 <button class="action-btn secondary" style="margin-top:0;" onclick="closeInteractiveModal()">Cancel</button>
@@ -288,18 +234,18 @@
         <div class="preview-content">
             <h3 style="font-family:'Sora',sans-serif; margin-bottom: 6px;" id="modal-title">Studio Result</h3>
             <p style="color: var(--text-muted); font-size: 0.85rem;">Before & after comparison:</p>
-
             <div class="comparison-grid">
                 <div class="comparison-box">
                     <h4>Original</h4>
                     <img id="prev-before" src="" alt="Original">
+                    <span class="size-tag" id="size-before"></span>
                 </div>
                 <div class="comparison-box">
                     <h4>Processed</h4>
                     <img id="prev-after" src="" alt="Processed">
+                    <span class="size-tag" id="size-after"></span>
                 </div>
             </div>
-
             <button class="action-btn success" onclick="downloadFinalOutput()">Download File</button>
             <button class="action-btn secondary" style="margin-top: 10px;" onclick="closePreviewModal()">Close</button>
         </div>
@@ -418,6 +364,12 @@
                         <div class="upload-hint" id="hint-compress">PNG, JPG · up to 10MB</div>
                         <input type="file" id="file-compress" accept="image/*" onchange="updateFileName('compress')">
                     </div>
+                    <select id="compress-mode">
+                        <option value="0.8">Low Compression (Best Quality, ~80%)</option>
+                        <option value="0.5" selected>Medium Compression (Balanced, ~50%)</option>
+                        <option value="0.3">High Compression (Smallest Size, ~30%)</option>
+                        <option value="0.15">Extreme Compression (Smallest File)</option>
+                    </select>
                 </div>
                 <div>
                     <button class="action-btn" onclick="processTool('compress')">Compress File</button>
@@ -462,12 +414,24 @@
             const hint = document.getElementById('hint-' + key);
             const zone = document.getElementById('zone-' + key);
             if (input.files && input.files.length > 0) {
-                hint.innerText = input.files[0].name;
+                hint.innerText = input.files[0].name + " (" + formatFileSize(input.files[0].size) + ")";
                 zone.classList.add('has-file');
             } else {
                 hint.innerText = 'PNG, JPG · up to 10MB';
                 zone.classList.remove('has-file');
             }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+            if (bytes >= 1024) return (bytes / 1024).toFixed(1) + " KB";
+            return bytes + " B";
+        }
+
+        function dataUriSize(dataUri) {
+            let base64 = dataUri.split(',')[1] || '';
+            let padding = (base64.match(/=+$/) || [''])[0].length;
+            return Math.round((base64.length * 3) / 4 - padding);
         }
 
         function setupDropzone(key) {
@@ -488,9 +452,7 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            uploadKeys.forEach(setupDropzone);
-        });
+        document.addEventListener("DOMContentLoaded", () => { uploadKeys.forEach(setupDropzone); });
 
         let globalProcessedUri = null;
         let globalToolType = "";
@@ -509,24 +471,21 @@
             let targetChip = document.getElementById('mode-' + mode);
             if (targetChip) targetChip.classList.add('active');
             let textGroup = document.getElementById('text-controls-group');
-            if (mode === 'text') { textGroup.style.display = 'flex'; } else { textGroup.style.display = 'none'; }
+            if (mode === 'text') {
+                textGroup.style.display = 'flex';
+                let txtInput = document.getElementById('canvas-text-input');
+                if (txtInput) setTimeout(() => txtInput.focus(), 50);
+            } else {
+                textGroup.style.display = 'none';
+            }
         }
 
         function openWatermarkStudio() {
             let fileInput = document.getElementById('file-watermark');
             let statusBox = document.getElementById('status-watermark');
-
-            if (!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
-                return;
-            }
-
+            if (!fileInput || fileInput.files.length === 0) { statusBox.innerText = "⚠️ Kripya pehle image file select karein!"; return; }
             let file = fileInput.files[0];
-            if (!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
-                return;
-            }
-
+            if (!file.type.startsWith('image/')) { statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!"; return; }
             let reader = new FileReader();
             reader.onload = function (e) {
                 activeEditorImageSrc = e.target.result;
@@ -540,17 +499,12 @@
                     ctxObj.fillStyle = "#FFFFFF";
                     ctxObj.fillRect(0, 0, canvasObj.width, canvasObj.height);
                     ctxObj.drawImage(img, 0, 0);
-
                     document.getElementById('studio-title-heading').innerText = "Manual Watermark Eraser";
                     document.getElementById('studio-desc-heading').innerText = "Watermark ya stamp ke upar touch karke white background se mita dein.";
-
                     let toolbarContainer = document.getElementById('toolbar-buttons-container');
-                    toolbarContainer.innerHTML = `
-                        <button class="tool-chip active" id="mode-watermark-eraser" onclick="setMode('watermark-eraser')">Eraser Brush (Touch to Erase)</button>
-                    `;
+                    toolbarContainer.innerHTML = `<button class="tool-chip active" id="mode-watermark-eraser" onclick="setMode('watermark-eraser')">Eraser Brush (Touch to Erase)</button>`;
                     document.getElementById('text-controls-group').style.display = 'none';
                     currentEditMode = 'watermark-eraser';
-
                     document.getElementById('interactive-modal').style.display = 'flex';
                     statusBox.innerText = "Status: Ready";
                 };
@@ -561,18 +515,9 @@
         function openInteractiveStudio() {
             let fileInput = document.getElementById('file-editor');
             let statusBox = document.getElementById('status-editor');
-
-            if (!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
-                return;
-            }
-
+            if (!fileInput || fileInput.files.length === 0) { statusBox.innerText = "⚠️ Kripya pehle image file select karein!"; return; }
             let file = fileInput.files[0];
-            if (!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
-                return;
-            }
-
+            if (!file.type.startsWith('image/')) { statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!"; return; }
             let reader = new FileReader();
             reader.onload = function (e) {
                 activeEditorImageSrc = e.target.result;
@@ -586,10 +531,8 @@
                     ctxObj.fillStyle = "#FFFFFF";
                     ctxObj.fillRect(0, 0, canvasObj.width, canvasObj.height);
                     ctxObj.drawImage(img, 0, 0);
-
                     document.getElementById('studio-title-heading').innerText = "Interactive Document Canvas";
                     document.getElementById('studio-desc-heading').innerText = "Directly click/touch lines to write text, erase/whiteout errors, ya highlight important text.";
-
                     let toolbarContainer = document.getElementById('toolbar-buttons-container');
                     toolbarContainer.innerHTML = `
                         <button class="tool-chip active" id="mode-text" onclick="setMode('text')">Type Text</button>
@@ -597,7 +540,6 @@
                         <button class="tool-chip" id="mode-highlighter" onclick="setMode('highlighter')">Highlighter</button>
                     `;
                     setMode('text');
-
                     document.getElementById('interactive-modal').style.display = 'flex';
                     statusBox.innerText = "Status: Ready";
                 };
@@ -611,7 +553,6 @@
                 canvas.addEventListener('mousedown', (e) => { isDrawing = true; handleCanvasAction(e, true); });
                 canvas.addEventListener('mousemove', (e) => { if (isDrawing) handleCanvasAction(e, false); });
                 window.addEventListener('mouseup', () => { isDrawing = false; });
-
                 canvas.addEventListener('touchstart', (e) => { isDrawing = true; handleCanvasAction(e, true); e.preventDefault(); }, { passive: false });
                 canvas.addEventListener('touchmove', (e) => { if (isDrawing) handleCanvasAction(e, false); e.preventDefault(); }, { passive: false });
                 window.addEventListener('touchend', () => { isDrawing = false; });
@@ -621,7 +562,6 @@
         function handleCanvasAction(e, isClick) {
             if (!ctxObj || !canvasObj) return;
             const pos = getEventPos(e, canvasObj);
-
             if (currentEditMode === 'watermark-eraser') {
                 ctxObj.fillStyle = "#FFFFFF";
                 ctxObj.beginPath();
@@ -629,22 +569,19 @@
                 ctxObj.fill();
             }
             else if (currentEditMode === 'eraser') {
-                if (isClick) {
-                    ctxObj.fillStyle = "#FFFFFF";
-                    ctxObj.fillRect(pos.x - 25, pos.y - 15, 70, 30);
-                }
+                ctxObj.fillStyle = "#FFFFFF";
+                ctxObj.fillRect(pos.x - 25, pos.y - 15, 70, 30);
             }
             else if (currentEditMode === 'highlighter') {
-                if (isClick) {
-                    ctxObj.fillStyle = "rgba(240, 178, 60, 0.42)";
-                    ctxObj.fillRect(pos.x - 5, pos.y - 18, 120, 26);
-                }
+                ctxObj.fillStyle = "rgba(240, 178, 60, 0.42)";
+                ctxObj.fillRect(pos.x - 5, pos.y - 18, 120, 26);
             }
             else if (currentEditMode === 'text' && isClick) {
                 let txtInput = document.getElementById('canvas-text-input');
-                let txt = txtInput ? txtInput.value : "Verified";
+                let txt = txtInput ? txtInput.value.trim() : "";
+                if (!txt) return;
                 ctxObj.fillStyle = "#FFFFFF";
-                ctxObj.fillRect(pos.x - 4, pos.y - 24, (txt.length * 16), 32);
+                ctxObj.fillRect(pos.x - 4, pos.y - 24, (txt.length * 13) + 8, 32);
                 ctxObj.font = "bold 22px 'Inter', Arial, sans-serif";
                 ctxObj.fillStyle = "#1E293B";
                 ctxObj.fillText(txt, pos.x, pos.y);
@@ -656,10 +593,7 @@
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
             let clientX = e.clientX, clientY = e.clientY;
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            }
+            if (e.touches && e.touches.length > 0) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
             return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
         }
 
@@ -669,9 +603,10 @@
             globalFileName = "cleaned_document.jpg";
             globalToolType = "editor";
             closeInteractiveModal();
-
             document.getElementById("prev-before").src = activeEditorImageSrc;
             document.getElementById("prev-after").src = globalProcessedUri;
+            document.getElementById("size-before").innerText = formatFileSize(dataUriSize(activeEditorImageSrc));
+            document.getElementById("size-after").innerText = formatFileSize(dataUriSize(globalProcessedUri));
             document.getElementById("modal-title").innerText = "Manual Studio Result";
             document.getElementById("preview-modal").style.display = "flex";
         }
@@ -704,26 +639,15 @@
         function processToolAuto(toolType) {
             let inputId = 'file-' + toolType, statusId = 'status-' + toolType;
             let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
-
-            if (!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
-                return;
-            }
-
+            if (!fileInput || fileInput.files.length === 0) { statusBox.innerText = "⚠️ Kripya pehle image file select karein!"; return; }
             let file = fileInput.files[0];
-            if (!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
-                return;
-            }
-
+            if (!file.type.startsWith('image/')) { statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!"; return; }
             statusBox.innerText = "⚡ Processing... ⏳";
             let reader = new FileReader();
-
             reader.onload = function (e) {
                 let originalSrc = e.target.result;
                 let img = new Image();
                 img.src = originalSrc;
-
                 img.onload = function () {
                     let width = img.width, height = img.height;
                     let canvas = document.createElement('canvas');
@@ -732,26 +656,23 @@
                     ctx.fillStyle = "#FFFFFF";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, 0, 0);
-
                     try {
                         let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         let pixels = imgData.data;
                         for (let i = 0; i < pixels.length; i += 4) {
                             let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
-                            if (r > 130 && g > 130 && b > 130 && Math.abs(r - g) < 30) {
-                                pixels[i] = 255; pixels[i + 1] = 255; pixels[i + 2] = 255;
-                            }
+                            if (r > 130 && g > 130 && b > 130 && Math.abs(r - g) < 30) { pixels[i] = 255; pixels[i + 1] = 255; pixels[i + 2] = 255; }
                         }
                         ctx.putImageData(imgData, 0, 0);
                         let processedUri = canvas.toDataURL('image/jpeg', 0.95);
-
                         statusBox.innerText = "✅ Ready for Review!";
                         globalProcessedUri = processedUri;
                         globalFileName = "auto_clean_document.jpg";
                         globalToolType = toolType;
-
                         document.getElementById("prev-before").src = originalSrc;
                         document.getElementById("prev-after").src = processedUri;
+                        document.getElementById("size-before").innerText = formatFileSize(dataUriSize(originalSrc));
+                        document.getElementById("size-after").innerText = formatFileSize(dataUriSize(processedUri));
                         document.getElementById("modal-title").innerText = "Auto Watermark Cleaner Result";
                         document.getElementById("preview-modal").style.display = "flex";
                     } catch (err) { statusBox.innerText = "❌ Processing Error."; }
@@ -763,30 +684,18 @@
         function processTool(toolType) {
             let inputId = 'file-' + toolType, statusId = 'status-' + toolType;
             let fileInput = document.getElementById(inputId), statusBox = document.getElementById(statusId);
-
-            if (!fileInput || fileInput.files.length === 0) {
-                statusBox.innerText = "⚠️ Kripya pehle image file select karein!";
-                return;
-            }
-
+            if (!fileInput || fileInput.files.length === 0) { statusBox.innerText = "⚠️ Kripya pehle image file select karein!"; return; }
             let file = fileInput.files[0];
-            if (!file.type.startsWith('image/')) {
-                statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!";
-                return;
-            }
-
+            if (!file.type.startsWith('image/')) { statusBox.innerText = "⚠️ Error: Yeh valid image file nahi hai!"; return; }
             statusBox.innerText = "⚡ Processing... ⏳";
             let reader = new FileReader();
-
             reader.onload = function (e) {
                 let originalSrc = e.target.result;
                 let img = new Image();
                 img.src = originalSrc;
-
                 img.onload = function () {
                     let width = img.width, height = img.height;
                     let canvas = document.createElement('canvas');
-
                     if (toolType === 'resizer') {
                         let mode = document.getElementById('resize-mode').value;
                         if (mode === 'a4') { canvas.width = 1240; canvas.height = 1754; }
@@ -799,17 +708,13 @@
                         }
                         canvas.width = width; canvas.height = height;
                     }
-
                     let ctx = canvas.getContext('2d');
                     ctx.fillStyle = "#FFFFFF";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
                     let dx = (canvas.width - width) / 2, dy = (canvas.height - height) / 2;
                     if (toolType !== 'resizer') { dx = 0; dy = 0; width = canvas.width; height = canvas.height; }
                     ctx.drawImage(img, dx, dy, width, height);
-
                     let processedUri = originalSrc, titleText = "", outName = "";
-
                     try {
                         if (toolType === 'resizer') {
                             processedUri = canvas.toDataURL('image/jpeg', 0.95);
@@ -829,21 +734,22 @@
                             titleText = "High Contrast Enhancer"; outName = "enhanced_document.jpg";
                         }
                         else if (toolType === 'compress') {
-                            processedUri = canvas.toDataURL('image/jpeg', 0.50);
+                            let quality = parseFloat(document.getElementById('compress-mode').value) || 0.5;
+                            processedUri = canvas.toDataURL('image/jpeg', quality);
                             titleText = "Optimized Image Compression"; outName = "compressed_image.jpg";
                         }
                         else if (toolType === 'pdf') {
                             processedUri = canvas.toDataURL('image/jpeg', 0.95);
                             titleText = "Professional PDF Generator"; outName = "converted_document.pdf";
                         }
-
                         statusBox.innerText = "✅ Ready for Review!";
                         globalProcessedUri = processedUri;
                         globalFileName = outName;
                         globalToolType = toolType;
-
                         document.getElementById("prev-before").src = originalSrc;
                         document.getElementById("prev-after").src = processedUri;
+                        document.getElementById("size-before").innerText = "Original: " + formatFileSize(file.size);
+                        document.getElementById("size-after").innerText = "Naya size: " + formatFileSize(dataUriSize(processedUri));
                         document.getElementById("modal-title").innerText = titleText;
                         document.getElementById("preview-modal").style.display = "flex";
                     } catch (err) { statusBox.innerText = "❌ Processing Error."; }

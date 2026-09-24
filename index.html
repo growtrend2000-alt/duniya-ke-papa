@@ -3,616 +3,339 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Self Edit PDF — Pawan Document Studio</title>
+<title>Forever Mine · Romantic Space</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0D1117; --surface:#161B22; --surface-2:#1C2129;
-  --border:rgba(148,163,184,.12); --border-strong:rgba(148,163,184,.22);
-  --text-main:#EDF1F7; --text-muted:#8B95A7; --text-dim:#5C6478;
-  --accent:#60A5FA; --accent-soft:rgba(96,165,250,.16);
-  --success:#22C55E; --danger:#F87171; --warn:#FBBF24;
-  --radius-lg:20px; --radius-md:14px; --radius-sm:10px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text-main);min-height:100vh;padding-bottom:60px}
-header{background:rgba(10,13,18,.9);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-header h1{font-family:'Sora',sans-serif;font-size:1.15rem}
-header .back{color:var(--text-muted);text-decoration:none;font-size:0.85rem;font-weight:600}
-.wrap{max-width:1000px;margin:0 auto;padding:24px 16px}
-.upload-panel{background:var(--surface);border:1.5px dashed var(--border-strong);border-radius:var(--radius-lg);padding:36px 20px;text-align:center;cursor:pointer}
-.upload-panel:hover{border-color:var(--accent);background:var(--accent-soft)}
-.upload-panel input{display:none}
-.upload-panel .ic{font-size:2rem;margin-bottom:10px}
-.upload-panel h3{font-family:'Sora',sans-serif;font-size:1.05rem;margin-bottom:4px}
-.upload-panel p{color:var(--text-dim);font-size:.82rem}
+  :root {
+    --bg-black: #080507;
+    --card-dark: #120b0f;
+    --border-pink: rgba(255, 77, 126, 0.2);
+    --primary-red: #ff1e56;
+    --accent-pink: #ff4d7e;
+    --text-white: #ffffff;
+    --text-muted: #b3a4ab;
+    --radius: 24px;
+  }
 
-.status{font-size:.8rem;color:var(--text-muted);margin:6px 0 14px}
-.status.err{color:var(--danger)}
-.status.ok{color:var(--success)}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-.mode-note{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-size:.78rem;color:var(--text-muted);margin-bottom:14px}
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-black);
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(255, 30, 86, 0.12) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(255, 77, 126, 0.08) 0%, transparent 40%);
+    color: var(--text-white);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    overflow: hidden;
+  }
 
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;position:sticky;top:66px;background:var(--bg);padding:8px 0;z-index:70}
-.btn{background:var(--accent);color:#0A0D11;border:none;padding:9px 13px;border-radius:var(--radius-sm);font-weight:700;font-size:.78rem;cursor:pointer}
-.btn.secondary{background:rgba(255,255,255,.06);color:var(--text-main);border:1px solid var(--border-strong)}
-.btn.success{background:var(--success)}
-.btn.danger{background:var(--danger);color:#3a0d0d}
-.btn.active{outline:2px solid #fff}
-.btn:disabled{opacity:.35;cursor:not-allowed}
-.pagectrl{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--text-muted)}
-.pagectrl input{width:44px;text-align:center;background:var(--surface-2);color:var(--text-main);border:1px solid var(--border-strong);border-radius:7px;padding:5px}
+  .love-container {
+    width: min(100%, 400px);
+    background: var(--card-dark);
+    border: 1px solid var(--border-pink);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 30, 86, 0.15);
+  }
 
-.stage-wrap{overflow:auto;background:#000;border-radius:var(--radius-md);border:1px solid var(--border)}
-.stage{position:relative;margin:0 auto;background:#fff;display:block}
-.stage canvas{display:block}
-.overlay{position:absolute;top:0;left:0}
-.line-hit{position:absolute;cursor:text;border:1px dashed transparent;border-radius:2px}
-.line-hit:hover{border-color:var(--accent)}
-.line-edit{position:absolute;background:#fff;color:#111;outline:2px solid var(--accent);border:none;padding:0 2px;line-height:1.1;white-space:pre;overflow:visible}
-.cover-box{position:absolute;background:#fff;box-shadow:inset 0 0 0 1px var(--border-strong)}
-.newtext-box{position:absolute;background:transparent;color:#111;outline:2px dashed var(--success);border:none;padding:0 2px;white-space:pre}
+  .heart-box {
+    font-size: 48px;
+    color: var(--primary-red);
+    animation: pulseHeart 1.5s infinite ease-in-out;
+    margin-bottom: 12px;
+  }
 
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px;margin-top:12px;display:none;gap:10px;flex-wrap:wrap;align-items:center}
-.panel.show{display:flex}
-.panel label{font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px}
-.panel select, .panel input[type=number]{background:var(--surface-2);color:var(--text-main);border:1px solid var(--border-strong);border-radius:7px;padding:6px 8px;font-size:.8rem}
-.panel input[type=color]{width:36px;height:32px;border:none;background:none;padding:0}
-.toggle-grp{display:flex;gap:4px}
-.toggle-grp button{background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text-main);border-radius:7px;padding:6px 10px;font-size:.78rem;cursor:pointer}
-.toggle-grp button.on{background:var(--accent);color:#0A0D11;border-color:var(--accent)}
+  @keyframes pulseHeart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+  }
 
-.hint-pill{font-size:.72rem;color:var(--text-dim);background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:4px 10px}
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  h1 span {
+    color: var(--accent-pink);
+  }
+
+  .tagline {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .message-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-pink);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-white);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+  }
+
+  .romantic-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary-red), var(--accent-pink));
+    color: var(--text-white);
+    border: none;
+    padding: 15px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 30, 86, 0.35);
+    transition: transform 0.2s, filter 0.2s;
+  }
+
+  .romantic-btn:active {
+    transform: scale(0.97);
+  }
+
+  .romantic-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 10px;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-pink);
+    border-radius: 14px;
+    padding: 12px 8px;
+  }
+
+  .stat-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent-pink);
+    margin-bottom: 2px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .footer-note {
+    margin-top: 24px;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Popup Modal Styles with Absolute Position for Swifting */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+  }
+
+  .modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-dark);
+    border: 2px solid var(--accent-pink);
+    border-radius: var(--radius);
+    padding: 30px 20px;
+    width: min(90%, 320px);
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255, 77, 126, 0.3);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .modal-heart {
+    font-size: 40px;
+    color: var(--primary-red);
+    margin-bottom: 10px;
+  }
+
+  .modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-white);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .btn-yes, .btn-no {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--primary-red), var(--accent-pink));
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(255, 30, 86, 0.4);
+  }
+
+  .btn-no {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    border: 1px solid var(--border-pink);
+  }
+
+  .success-msg {
+    display: none;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-pink);
+    margin-top: 15px;
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>✏️ Self Edit PDF</h1>
-  <a class="back" href="index.html">← Wapas Home</a>
-</header>
-
-<div class="wrap">
-
-  <div class="upload-panel" id="upload-panel">
-    <div class="ic">📤</div>
-    <h3>PDF file yahan click karke chuno</h3>
-    <p>Kisi bhi line par tap karke seedha edit karo — font/size apne aap match hoga</p>
-    <input type="file" id="main-input" accept="application/pdf">
-  </div>
-
-  <div id="status" class="status"></div>
-
-  <div id="editor-area" style="display:none;">
-    <div class="mode-note">Kisi bhi <b>line par tap</b> karo edit karne ke liye. <b>+Text</b> se kahi bhi naya text daalo. <b>Cover</b> se drag karke kuch chhupao (white-out). Font apne aap best-guess detect hota hai — neeche panel se manually bhi badal sakte ho.</div>
-
-    <div class="toolbar">
-      <div class="pagectrl">
-        <button class="btn secondary" id="btn-prev">◀</button>
-        <span>Page</span><input type="number" id="page-num" value="1" min="1">/<span id="page-count">1</span>
-        <button class="btn secondary" id="btn-next">▶</button>
+  <!-- Popup Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" id="modalBox">
+      <div class="modal-heart">💖</div>
+      <div class="modal-title">I LOVE YOU ANCHAL</div>
+      <div class="modal-buttons" id="buttonArea">
+        <button class="btn-yes" id="yesBtn">I Love You 2 ❤️</button>
+        <button class="btn-no" id="noBtn">No</button>
       </div>
-      <button class="btn secondary" id="btn-zoom-out">− Zoom</button>
-      <button class="btn secondary" id="btn-zoom-in">+ Zoom</button>
-      <button class="btn secondary" id="btn-add-text">+ Text</button>
-      <button class="btn secondary" id="btn-cover">▭ Cover</button>
-      <button class="btn secondary" id="btn-undo">↺ Undo</button>
-      <button class="btn success" id="btn-download">⬇️ PDF Save Karo</button>
-    </div>
-
-    <div class="stage-wrap">
-      <div class="stage" id="stage">
-        <canvas id="pdf-canvas"></canvas>
-        <div class="overlay" id="overlay"></div>
-      </div>
-    </div>
-
-    <div class="panel" id="edit-panel">
-      <div>
-        <label>Font</label>
-        <select id="p-font">
-          <option value="helvetica">Helvetica (Sans)</option>
-          <option value="times">Times (Serif)</option>
-          <option value="courier">Courier (Mono)</option>
-          <option value="devanagari">Hindi / देवनागरी</option>
-        </select>
-      </div>
-      <div>
-        <label>Size</label>
-        <input type="number" id="p-size" min="6" max="96" style="width:60px">
-      </div>
-      <div class="toggle-grp">
-        <button id="p-bold" title="Bold">B</button>
-        <button id="p-italic" title="Italic"><i>I</i></button>
-      </div>
-      <div>
-        <label>Color</label>
-        <input type="color" id="p-color" value="#000000">
-      </div>
-      <button class="btn danger small" id="p-delete">🗑️ Hatao</button>
-      <span class="hint-pill">Changes turant preview me dikhengi</span>
+      <div class="success-msg" id="successMsg">Yay! Mujhe pata tha! 🥰✨</div>
     </div>
   </div>
-</div>
 
-<script>
-const { PDFDocument, StandardFonts, rgb } = PDFLib;
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  <div class="love-container">
+    <div class="heart-box">❤️</div>
+    <h1>Forever <span>Mine</span></h1>
+    <p class="tagline">A special place built with pure love</p>
 
-const DEVANAGARI_TTF_URL = "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main/phaseIII_only/unhinted/ttf/NotoSansDevanagari/NotoSansDevanagari-Regular.ttf";
-const isDevanagari = (s) => /[\u0900-\u097F]/.test(s || '');
+    <div class="message-card" id="quoteText">
+      "You are my today and all of my tomorrows. ✨"
+    </div>
 
-let originalBytes = null;
-let pdfJsDoc = null;
-let pageCount = 0;
-let currentPage = 1;
-let scale = 1.4;
-let dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-let displayViewport = null;
-let linesCache = {};
-let edits = {};
-let history = [];
-let mode = 'select';
-let activeEditId = null;
-let idCounter = 1;
+    <button class="romantic-btn" id="surpriseBtn">Click For Surprise 💖</button>
 
-const statusEl = document.getElementById('status');
-const uploadPanel = document.getElementById('upload-panel');
-const editorArea = document.getElementById('editor-area');
-const mainInput = document.getElementById('main-input');
-const canvas = document.getElementById('pdf-canvas');
-const ctx = canvas.getContext('2d');
-const stage = document.getElementById('stage');
-const overlay = document.getElementById('overlay');
-const pageNumInput = document.getElementById('page-num');
-const pageCountSpan = document.getElementById('page-count');
-const editPanel = document.getElementById('edit-panel');
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-value">100%</span>
+        <span class="stat-label">Loyalty</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">∞</span>
+        <span class="stat-label">Endless</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">True</span>
+        <span class="stat-label">Connection</span>
+      </div>
+    </div>
 
-function setStatus(msg, type) {
-  statusEl.textContent = msg || '';
-  statusEl.className = 'status' + (type ? ' ' + type : '');
-}
+    <div class="footer-note">Created With Love</div>
+  </div>
 
-uploadPanel.addEventListener('click', () => mainInput.click());
-mainInput.addEventListener('change', () => {
-  if (mainInput.files.length) loadPdf(mainInput.files[0]);
-});
+  <script>
+    // Quotes logic
+    const quotes = [
+      "In a world full of chaos, you are my absolute peace. 🌹",
+      "I still fall for you a little bit more every single day. 🖤",
+      "You hold the key to my heart, and it stays with you forever. ✨",
+      "Together is my most favorite place in the entire universe. 💖",
+      "Every second spent with you feels like a beautiful dream. 🌸"
+    ];
 
-async function loadPdf(file) {
-  setStatus('⏳ PDF load ho raha hai...');
-  try {
-    const buf = await file.arrayBuffer();
-    originalBytes = buf.slice(0);
-    pdfJsDoc = await pdfjsLib.getDocument({ data: buf.slice(0) }).promise;
-    pageCount = pdfJsDoc.numPages;
-    currentPage = 1;
-    edits = {};
-    linesCache = {};
-    history = [];
-    pageCountSpan.textContent = pageCount;
-    pageNumInput.value = 1;
-    pageNumInput.max = pageCount;
-    uploadPanel.style.display = 'none';
-    editorArea.style.display = 'block';
-    setStatus(`✅ Load ho gaya — ${pageCount} pages.`, 'ok');
-    await renderPage(1);
-  } catch (err) {
-    setStatus('❌ Error: ' + err.message, 'err');
-  }
-}
+    const btn = document.getElementById("surpriseBtn");
+    const quoteBox = document.getElementById("quoteText");
 
-async function renderPage(num) {
-  currentPage = num;
-  pageNumInput.value = num;
-  const page = await pdfJsDoc.getPage(num);
-  displayViewport = page.getViewport({ scale });
-  const renderViewport = page.getViewport({ scale: scale * dpr });
+    btn.addEventListener("click", () => {
+      const randomIdx = Math.floor(Math.random() * quotes.length);
+      quoteBox.style.opacity = 0;
+      setTimeout(() => {
+        quoteBox.textContent = quotes[randomIdx];
+        quoteBox.style.opacity = 1;
+      }, 250);
+    });
 
-  canvas.width = renderViewport.width;
-  canvas.height = renderViewport.height;
-  canvas.style.width = displayViewport.width + 'px';
-  canvas.style.height = displayViewport.height + 'px';
-  stage.style.width = displayViewport.width + 'px';
-  stage.style.height = displayViewport.height + 'px';
-  overlay.style.width = displayViewport.width + 'px';
-  overlay.style.height = displayViewport.height + 'px';
+    // Swift Pop-up Logic on clicking 'No'
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const modalBox = document.getElementById("modalBox");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const successMsg = document.getElementById("successMsg");
+    const buttonArea = document.getElementById("buttonArea");
 
-  await page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
+    function swiftPopup() {
+      // Screen ke andar random position calculate karna taaki box screen se bahar na jaye
+      const padding = 20;
+      const maxX = window.innerWidth - modalBox.clientWidth - padding;
+      const maxY = window.innerHeight - modalBox.clientHeight - padding;
+      
+      const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+      const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-  if (!linesCache[num]) {
-    linesCache[num] = await extractLines(page);
-  }
-  buildOverlay(num, page);
-}
-
-async function extractLines(page) {
-  const textContent = await page.getTextContent();
-  const lines = [];
-  textContent.items.forEach(item => {
-    if (!item.str || !item.str.trim()) return;
-    const tr = item.transform;
-    const fontSize = Math.hypot(tr[2], tr[3]) || Math.hypot(tr[0], tr[1]) || 10;
-    const x = tr[4], y = tr[5];
-    let line = lines.find(l => Math.abs(l.y - y) < Math.max(fontSize, l.fontSize) * 0.4);
-    if (!line) {
-      line = { y, fontSize, fontKey: item.fontName, parts: [] };
-      lines.push(line);
-    }
-    line.fontSize = Math.max(line.fontSize, fontSize);
-    line.parts.push({ str: item.str, x, width: item.width || item.str.length * fontSize * 0.5 });
-  });
-  lines.forEach(line => {
-    line.parts.sort((a, b) => a.x - b.x);
-    line.text = line.parts.map(p => p.str).join('');
-    line.minX = Math.min(...line.parts.map(p => p.x));
-    line.maxX = Math.max(...line.parts.map(p => p.x + p.width));
-    let bold = false, italic = false, family = 'helvetica';
-    try {
-      const fo = page.commonObjs.get(line.fontKey);
-      const n = ((fo && (fo.name || fo.fallbackName)) || '').toLowerCase();
-      bold = n.includes('bold');
-      italic = n.includes('italic') || n.includes('oblique');
-      if (n.includes('times') || n.includes('serif') || n.includes('georgia')) family = 'times';
-      else if (n.includes('courier') || n.includes('mono')) family = 'courier';
-    } catch (e) {}
-    if (isDevanagari(line.text)) family = 'devanagari';
-    line.bold = bold; line.italic = italic; line.family = family;
-  });
-  return lines.filter(l => l.text.trim());
-}
-
-function pdfPtToCss(x, y) {
-  const [vx, vy] = displayViewport.convertToViewportPoint(x, y);
-  return { x: vx, y: vy };
-}
-function cssToPdfPt(x, y) {
-  const [px, py] = displayViewport.convertToPdfPoint(x, y);
-  return { x: px, y: py };
-}
-
-function pageEdits(num) {
-  if (!edits[num]) edits[num] = [];
-  return edits[num];
-}
-
-function findEditForLine(num, line) {
-  return pageEdits(num).find(e => e.type === 'line' && e.origKey === line.y + '_' + line.minX.toFixed(1));
-}
-
-function buildOverlay(num, page) {
-  overlay.innerHTML = '';
-  const lines = linesCache[num] || [];
-  const pEdits = pageEdits(num);
-
-  lines.forEach(line => {
-    const key = line.y + '_' + line.minX.toFixed(1);
-    const existing = pEdits.find(e => e.type === 'line' && e.origKey === key);
-    const topLeft = pdfPtToCss(line.minX, line.y + line.fontSize * 0.85);
-    const cssFontSize = line.fontSize * scale;
-    const cssWidth = (line.maxX - line.minX) * scale + 6;
-
-    if (existing) {
-      renderBakedLine(existing, topLeft, cssWidth, cssFontSize);
-    } else {
-      const hit = document.createElement('div');
-      hit.className = 'line-hit';
-      hit.style.left = topLeft.x + 'px';
-      hit.style.top = topLeft.y + 'px';
-      hit.style.width = cssWidth + 'px';
-      hit.style.height = (cssFontSize * 1.2) + 'px';
-      hit.onclick = () => {
-        if (mode !== 'select') return;
-        const e = {
-          id: idCounter++, type: 'line', origKey: key,
-          x: line.minX, y: line.y, w: line.maxX - line.minX,
-          fontSize: line.fontSize, family: line.family, bold: line.bold, italic: line.italic,
-          color: '#000000', text: line.text
-        };
-        pushHistory();
-        pageEdits(num).push(e);
-        buildOverlay(num, page);
-        openLineEditor(e, num, page);
-      };
-      overlay.appendChild(hit);
-    }
-  });
-
-  pEdits.forEach(e => {
-    if (e.type === 'line') return;
-    if (e.type === 'cover') {
-      const tl = pdfPtToCss(e.x, e.y + e.h);
-      const box = document.createElement('div');
-      box.className = 'cover-box';
-      box.style.left = tl.x + 'px';
-      box.style.top = tl.y + 'px';
-      box.style.width = (e.w * scale) + 'px';
-      box.style.height = (e.h * scale) + 'px';
-      box.onclick = () => { pushHistory(); removeEdit(num, e.id); buildOverlay(num, page); };
-      overlay.appendChild(box);
-    } else if (e.type === 'newtext') {
-      const tl = pdfPtToCss(e.x, e.y + e.fontSize * 0.85);
-      renderBakedLine(e, tl, e.w ? e.w * scale : 200, e.fontSize * scale, true);
-    }
-  });
-}
-
-function fontStack(family) {
-  if (family === 'times') return "'Times New Roman', serif";
-  if (family === 'courier') return "'Courier New', monospace";
-  if (family === 'devanagari') return "'Noto Sans Devanagari','Nirmala UI',sans-serif";
-  return "Arial, Helvetica, sans-serif";
-}
-
-function renderBakedLine(e, topLeft, cssWidth, cssFontSize, isNew) {
-  const div = document.createElement('div');
-  div.className = isNew ? 'newtext-box' : 'line-edit';
-  div.textContent = e.text;
-  div.style.left = topLeft.x + 'px';
-  div.style.top = topLeft.y + 'px';
-  div.style.minWidth = Math.max(cssWidth, 20) + 'px';
-  div.style.fontSize = cssFontSize + 'px';
-  div.style.fontFamily = fontStack(e.family);
-  div.style.fontWeight = e.bold ? '700' : '400';
-  div.style.fontStyle = e.italic ? 'italic' : 'normal';
-  div.style.color = e.color;
-  div.onclick = (ev) => {
-    ev.stopPropagation();
-    if (mode !== 'select') return;
-    openLineEditor(e, currentPage, null);
-  };
-  overlay.appendChild(div);
-}
-
-function openLineEditor(e, num, page) {
-  activeEditId = e.id;
-  editPanel.classList.add('show');
-  document.getElementById('p-font').value = e.family;
-  document.getElementById('p-size').value = Math.round(e.fontSize * 10) / 10;
-  document.getElementById('p-bold').classList.toggle('on', e.bold);
-  document.getElementById('p-italic').classList.toggle('on', e.italic);
-  document.getElementById('p-color').value = e.color;
-
-  const nodes = overlay.querySelectorAll('.line-edit, .newtext-box');
-  nodes.forEach(n => {
-    if (n.textContent === e.text) {
-      n.contentEditable = 'true';
-      n.focus();
-      document.execCommand && placeCaretEnd(n);
-      n.oninput = () => { e.text = n.textContent; if (isDevanagari(e.text)) e.family = 'devanagari'; };
-      n.onblur = () => { n.contentEditable = 'false'; refreshCurrentPage(); };
-    }
-  });
-}
-
-function placeCaretEnd(el) {
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  range.collapse(false);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-function refreshCurrentPage() { renderPage(currentPage); }
-
-function removeEdit(num, id) {
-  edits[num] = pageEdits(num).filter(e => e.id !== id);
-}
-
-document.getElementById('p-font').onchange = (e) => { updateActive({ family: e.target.value }); };
-document.getElementById('p-size').onchange = (e) => { updateActive({ fontSize: parseFloat(e.target.value) || 12 }); };
-document.getElementById('p-color').onchange = (e) => { updateActive({ color: e.target.value }); };
-document.getElementById('p-bold').onclick = () => toggleActive('bold');
-document.getElementById('p-italic').onclick = () => toggleActive('italic');
-document.getElementById('p-delete').onclick = () => {
-  const list = pageEdits(currentPage);
-  const idx = list.findIndex(e => e.id === activeEditId);
-  if (idx >= 0) { pushHistory(); list.splice(idx, 1); editPanel.classList.remove('show'); refreshCurrentPage(); }
-};
-
-function getActive() {
-  return pageEdits(currentPage).find(e => e.id === activeEditId);
-}
-function updateActive(patch) {
-  const e = getActive();
-  if (!e) return;
-  pushHistory();
-  Object.assign(e, patch);
-  refreshCurrentPage();
-}
-function toggleActive(prop) {
-  const e = getActive();
-  if (!e) return;
-  pushHistory();
-  e[prop] = !e[prop];
-  document.getElementById('p-' + prop).classList.toggle('on', e[prop]);
-  refreshCurrentPage();
-}
-
-document.getElementById('btn-add-text').onclick = () => {
-  mode = mode === 'addtext' ? 'select' : 'addtext';
-  document.getElementById('btn-add-text').classList.toggle('active', mode === 'addtext');
-  document.getElementById('btn-cover').classList.remove('active');
-};
-overlay.addEventListener('click', (ev) => {
-  if (mode !== 'addtext') return;
-  const rect = overlay.getBoundingClientRect();
-  const cx = ev.clientX - rect.left, cy = ev.clientY - rect.top;
-  const pdfPt = cssToPdfPt(cx, cy);
-  const e = { id: idCounter++, type: 'newtext', x: pdfPt.x, y: pdfPt.y - 12, fontSize: 14, family: 'helvetica', bold: false, italic: false, color: '#000000', text: 'Naya text', w: 100 };
-  pushHistory();
-  pageEdits(currentPage).push(e);
-  mode = 'select';
-  document.getElementById('btn-add-text').classList.remove('active');
-  renderPage(currentPage).then(() => openLineEditor(e, currentPage, null));
-});
-
-document.getElementById('btn-cover').onclick = () => {
-  mode = mode === 'cover' ? 'select' : 'cover';
-  document.getElementById('btn-cover').classList.toggle('active', mode === 'cover');
-  document.getElementById('btn-add-text').classList.remove('active');
-};
-let coverStart = null, coverPreview = null;
-overlay.addEventListener('pointerdown', (ev) => {
-  if (mode !== 'cover') return;
-  const rect = overlay.getBoundingClientRect();
-  coverStart = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
-  coverPreview = document.createElement('div');
-  coverPreview.className = 'cover-box';
-  coverPreview.style.background = 'rgba(96,165,250,.35)';
-  coverPreview.style.left = coverStart.x + 'px';
-  coverPreview.style.top = coverStart.y + 'px';
-  overlay.appendChild(coverPreview);
-  overlay.setPointerCapture(ev.pointerId);
-});
-overlay.addEventListener('pointermove', (ev) => {
-  if (!coverStart || mode !== 'cover') return;
-  const rect = overlay.getBoundingClientRect();
-  const cx = ev.clientX - rect.left, cy = ev.clientY - rect.top;
-  const left = Math.min(cx, coverStart.x), top = Math.min(cy, coverStart.y);
-  const w = Math.abs(cx - coverStart.x), h = Math.abs(cy - coverStart.y);
-  coverPreview.style.left = left + 'px';
-  coverPreview.style.top = top + 'px';
-  coverPreview.style.width = w + 'px';
-  coverPreview.style.height = h + 'px';
-});
-overlay.addEventListener('pointerup', (ev) => {
-  if (!coverStart || mode !== 'cover') return;
-  const rect = overlay.getBoundingClientRect();
-  const cx = ev.clientX - rect.left, cy = ev.clientY - rect.top;
-  const p1 = cssToPdfPt(coverStart.x, coverStart.y);
-  const p2 = cssToPdfPt(cx, cy);
-  const x = Math.min(p1.x, p2.x), y = Math.min(p1.y, p2.y);
-  const w = Math.abs(p2.x - p1.x), h = Math.abs(p2.y - p1.y);
-  if (w > 2 && h > 2) {
-    pushHistory();
-    pageEdits(currentPage).push({ id: idCounter++, type: 'cover', x, y, w, h });
-  }
-  coverStart = null;
-  coverPreview = null;
-  mode = 'select';
-  document.getElementById('btn-cover').classList.remove('active');
-  refreshCurrentPage();
-});
-
-function pushHistory() {
-  history.push(JSON.stringify(edits));
-  if (history.length > 40) history.shift();
-}
-document.getElementById('btn-undo').onclick = () => {
-  if (!history.length) { setStatus('⚠️ Undo karne ke liye kuch nahi hai.', 'err'); return; }
-  edits = JSON.parse(history.pop());
-  editPanel.classList.remove('show');
-  refreshCurrentPage();
-};
-
-document.getElementById('btn-prev').onclick = () => { if (currentPage > 1) renderPage(currentPage - 1); editPanel.classList.remove('show'); };
-document.getElementById('btn-next').onclick = () => { if (currentPage < pageCount) renderPage(currentPage + 1); editPanel.classList.remove('show'); };
-pageNumInput.onchange = () => {
-  let n = parseInt(pageNumInput.value) || 1;
-  n = Math.max(1, Math.min(pageCount, n));
-  renderPage(n);
-};
-document.getElementById('btn-zoom-in').onclick = () => { scale = Math.min(scale + 0.2, 4); renderPage(currentPage); };
-document.getElementById('btn-zoom-out').onclick = () => { scale = Math.max(scale - 0.2, 0.5); renderPage(currentPage); };
-
-let devanagariFontBytesCache = null;
-async function getDevanagariBytes() {
-  if (devanagariFontBytesCache) return devanagariFontBytesCache;
-  const res = await fetch(DEVANAGARI_TTF_URL);
-  if (!res.ok) throw new Error('Devanagari font load nahi hui');
-  devanagariFontBytesCache = await res.arrayBuffer();
-  return devanagariFontBytesCache;
-}
-
-function standardFontFor(family, bold, italic) {
-  if (family === 'times') {
-    if (bold && italic) return StandardFonts.TimesRomanBoldItalic;
-    if (bold) return StandardFonts.TimesRomanBold;
-    if (italic) return StandardFonts.TimesRomanItalic;
-    return StandardFonts.TimesRoman;
-  }
-  if (family === 'courier') {
-    if (bold && italic) return StandardFonts.CourierBoldOblique;
-    if (bold) return StandardFonts.CourierBold;
-    if (italic) return StandardFonts.CourierOblique;
-    return StandardFonts.Courier;
-  }
-  if (bold && italic) return StandardFonts.HelveticaBoldOblique;
-  if (bold) return StandardFonts.HelveticaBold;
-  if (italic) return StandardFonts.HelveticaOblique;
-  return StandardFonts.Helvetica;
-}
-
-function hexToRgb01(hex) {
-  const h = hex.replace('#', '');
-  const r = parseInt(h.substring(0, 2), 16) / 255;
-  const g = parseInt(h.substring(2, 4), 16) / 255;
-  const b = parseInt(h.substring(4, 6), 16) / 255;
-  return rgb(r, g, b);
-}
-
-document.getElementById('btn-download').onclick = async () => {
-  const hasAnyEdits = Object.values(edits).some(list => list && list.length);
-  if (!hasAnyEdits) { setStatus('⚠️ Koi edit nahi kiya gaya — pehle kuch line par tap karke edit karo.', 'err'); return; }
-  setStatus('⏳ Final PDF taiyaar ho rahi hai...');
-  try {
-    const outDoc = await PDFDocument.load(originalBytes.slice(0), { ignoreEncryption: true });
-    let fontkitLib = window.fontkit;
-    const needsDevFont = Object.values(edits).some(list => list.some(e => e.family === 'devanagari' || isDevanagari(e.text || '')));
-    let devFont = null;
-    if (needsDevFont && fontkitLib) {
-      outDoc.registerFontkit(fontkitLib);
-      const bytes = await getDevanagariBytes();
-      devFont = await outDoc.embedFont(bytes, { subset: true });
-    }
-    const stdCache = {};
-    async function stdFont(name) {
-      if (!stdCache[name]) stdCache[name] = await outDoc.embedFont(name);
-      return stdCache[name];
+      modalBox.style.left = randomX + "px";
+      modalBox.style.top = randomY + "px";
+      modalBox.style.transform = "translate(0, 0)"; // Center transform hatana zaroori hai
     }
 
-    for (const pageNumStr of Object.keys(edits)) {
-      const pageNum = parseInt(pageNumStr);
-      const list = edits[pageNumStr];
-      if (!list || !list.length) continue;
-      const page = outDoc.getPage(pageNum - 1);
+    noBtn.addEventListener("click", swiftPopup);
+    noBtn.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      swiftPopup();
+    });
 
-      for (const e of list) {
-        if (e.type === 'cover') {
-          page.drawRectangle({ x: e.x, y: e.y, width: e.w, height: e.h, color: rgb(1, 1, 1) });
-        } else if (e.type === 'line') {
-          page.drawRectangle({
-            x: e.x - 1, y: e.y - e.fontSize * 0.3,
-            width: Math.max(e.w, e.text.length * e.fontSize * 0.5) + 4,
-            height: e.fontSize * 1.35, color: rgb(1, 1, 1)
-          });
-          const useDev = e.family === 'devanagari' || isDevanagari(e.text);
-          const font = useDev && devFont ? devFont : await stdFont(standardFontFor(e.family, e.bold, e.italic));
-          page.drawText(e.text, { x: e.x, y: e.y, size: e.fontSize, font, color: hexToRgb01(e.color) });
-        } else if (e.type === 'newtext') {
-          const useDev = e.family === 'devanagari' || isDevanagari(e.text);
-          const font = useDev && devFont ? devFont : await stdFont(standardFontFor(e.family, e.bold, e.italic));
-          page.drawText(e.text, { x: e.x, y: e.y, size: e.fontSize, font, color: hexToRgb01(e.color) });
-        }
-      }
-    }
+    yesBtn.addEventListener("click", () => {
+      buttonArea.style.display = "none";
+      successMsg.style.display = "block";
+      setTimeout(() => {
+        modalOverlay.style.opacity = "0";
+        modalOverlay.style.transition = "opacity 0.5s ease";
+        setTimeout(() => modalOverlay.remove(), 500);
+      }, 1500);
+    });
+  </script>
 
-    const bytes = await outDoc.save();
-    const blob = new Blob([bytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'edited.pdf'; a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
-    setStatus('✅ Download ho gaya!', 'ok');
-  } catch (err) {
-    setStatus('❌ Error: ' + err.message, 'err');
-  }
-};
-</script>
 </body>
 </html>

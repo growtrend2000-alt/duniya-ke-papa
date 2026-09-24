@@ -181,6 +181,19 @@
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
+  .proposer-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .proposer-name span {
+    color: var(--accent-pink);
+  }
+
   .modal-heart {
     font-size: 40px;
     color: var(--primary-red);
@@ -237,6 +250,7 @@
   <!-- Popup Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box" id="modalBox">
+      <div class="proposer-name">Proposal by <span>ABHINAV RAJ</span></div>
       <div class="modal-heart">💖</div>
       <div class="modal-title">I LOVE YOU ANCHAL</div>
       <div class="modal-buttons" id="buttonArea">
@@ -333,9 +347,8 @@
         modalOverlay.style.opacity = "0";
         modalOverlay.style.transition = "opacity 0.5s ease";
         setTimeout(() => modalOverlay.remove(), 500);
-      }, 1500);
+      }, 1000);
     });
   </script>
-
 </body>
 </html>
